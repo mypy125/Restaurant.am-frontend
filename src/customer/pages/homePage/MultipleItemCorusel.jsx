@@ -10,22 +10,22 @@ const MultipleItemCorusel = () => {
         dots: false,
         infinite: true,
         speed: 500,
-        slidesToShow: 5,
+        slidesToShow: 3, 
         slidesToScroll: 1,
         autoplay: true, 
-        autoplaySpeed: 2000, 
-        arrows: false,
+        autoplaySpeed: 2000,
+        arrows: false
     };
 
     return (
         <div>
             <Slider {...settings}>
-                {topMeels.map((item) => (
-                    <CarouselItem key={item.title} image={item.image} title={item.title} />
+                {topMeels.map((item, index) => (
+                    <CarouselItem key={index} image={item.image} title={item.title} />
                 ))}
             </Slider>
         </div>
     );
 };
 
-export default MultipleItemCorusel;
+export default MultipleItemCorusel
