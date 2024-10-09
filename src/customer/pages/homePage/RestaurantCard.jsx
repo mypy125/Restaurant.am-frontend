@@ -3,13 +3,12 @@ import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const RestaurantCard = ({ item }) => {
-    // State to manage if the restaurant is liked/favorited
+const RestaurantCard = ({ item,index }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const toggleFavorite = () => {
         setIsFavorite(!isFavorite);
@@ -18,7 +17,7 @@ const RestaurantCard = ({ item }) => {
     return (
         <Card className="m-5 w-[18rem] productCard">
             <div 
-            // onClick={() => navigate(`/restaurant/${item.city}/${item.name}/${item.id}`)}
+            onClick={() => navigate(`/restaurant/${item.city}/${item.name}/${index+1}`)}
             >
                 <img
                     className="w-full h-[10rem] rounded-t-md object-cover"
