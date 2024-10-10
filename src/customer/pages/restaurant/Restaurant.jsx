@@ -1,5 +1,6 @@
 import { Card, FormControlLabel, Radio, Divider, FormControl, RadioGroup, Typography } from "@mui/material";
 import React, { useState } from "react";
+import MenuItemCard from "./MenuItemCard";
 
 const categories = [
     "Khorovats (Barbecue)",
@@ -15,6 +16,7 @@ const categories = [
 ]
 
 const foodType = ["Vegetarian Only", "Non-Vegetarian Only", "Both"]
+const menu = [1,1,1,1,1,1,1]
 
 const Restaurant = () => {
     const [selectedCategory, setSelectedCategory] = useState();
@@ -94,6 +96,11 @@ const Restaurant = () => {
                             </FormControl>
                         </div>
                     </Card>
+                </div>
+                <div className="lg:w-[80%] space-y-5 lg:pl-10">
+
+                    {menu.map((item)=><MenuItemCard item={item}/>)}
+
                 </div>
             </section>
         </div>
