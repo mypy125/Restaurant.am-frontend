@@ -8,4 +8,5 @@ const CarouselItem = ({image, title}) => {
         </div>
     )
 }
+
 export default CarouselItem

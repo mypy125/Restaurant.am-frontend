@@ -33,4 +33,4 @@ const MenuItemCard = ({ item }) => {
     );
 };
 
-export default MenuItemCard;
+export default MenuItemCard
