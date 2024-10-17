@@ -4,19 +4,21 @@ import HomePage from "../customer/pages/homePage/HomePage";
 import Restaurant from "../customer/pages/restaurant/Restaurant";
 import Navbar from "../customer/components/navbar/Navbar";
 import Cart from "../customer/pages/cart/Cart";
+import Profile from "../customer/profile/Profile";
 
 export const CustomerRoutes = () => {
     return (
         <div className="relative">
             <div className="sticky top-0 z-50">
-                <Navbar/>
+                <Navbar />
             </div>
             <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/restaurant/:city/:title/:id' element={<Restaurant />} />
-            <Route path='/cart' element={<Cart />} />
-        
-        </Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/account/:register" element={<HomePage />} />
+                <Route path="/restaurant/:city/:title/:id" element={<Restaurant />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/my-profile/*" element={<Profile />} />
+            </Routes>
         </div>
     );
 };
