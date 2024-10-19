@@ -37,4 +37,4 @@ const EventCard = () => {
     )
 }
 
-export default EventCard
+export default EventCard;

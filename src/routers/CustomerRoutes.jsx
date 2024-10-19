@@ -5,6 +5,7 @@ import Restaurant from "../customer/pages/restaurant/Restaurant";
 import Navbar from "../customer/components/navbar/Navbar";
 import Cart from "../customer/pages/cart/Cart";
 import Profile from "../customer/profile/Profile";
+import Auth from "../customer/components/auth/Auth";
 
 export const CustomerRoutes = () => {
     return (
@@ -19,6 +20,7 @@ export const CustomerRoutes = () => {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/my-profile/*" element={<Profile />} />
             </Routes>
+            <Auth/>
         </div>
     );
 };

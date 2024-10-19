@@ -9,4 +9,4 @@ const CarouselItem = ({image, title}) => {
     )
 }
 
-export default CarouselItem
+export default CarouselItem;

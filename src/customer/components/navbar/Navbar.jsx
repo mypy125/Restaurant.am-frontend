@@ -3,13 +3,15 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
-import { Box, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material";
+import { pink } from '@mui/material/colors';
 import "./Navbar.css";
 
 const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = Boolean(anchorEl);
     const navigate = useNavigate();
+    const isLoggedIn = false;
 
     const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
     const handleCloseMenu = () => setAnchorEl(null);
@@ -36,6 +38,17 @@ const Navbar = () => {
                 <IconButton aria-label="Search">
                     <SearchIcon sx={{ fontSize: "1.5rem" }} />
                 </IconButton>
+            
+                {isLoggedIn ? (
+                    <Avatar sx={{bgcolor: "white", color: pink.A400}}>G</Avatar>
+                ) : (
+                    <IconButton
+                        aria-label="Profile"
+                        onClick={() => navigate("/account/login")}
+                    >
+                        <PersonIcon sx={{fontSize: "1.5rem"}} />
+                    </IconButton>
+                )}
 
                 <span
                     id="basic-button"

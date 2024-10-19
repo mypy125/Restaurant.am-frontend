@@ -23,4 +23,4 @@ const OrderCard = () => {
     );
 };
 
-export default OrderCard
+export default OrderCard;

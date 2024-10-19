@@ -28,4 +28,4 @@ const MultipleItemCorusel = () => {
     );
 };
 
-export default MultipleItemCorusel
+export default MultipleItemCorusel;

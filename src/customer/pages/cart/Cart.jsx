@@ -11,7 +11,7 @@ import * as Yup from "yup";
 const cartItems = [1,1,1,1];
 const addresses = [1,1,1,1,1];
 
-const style = {
+export const style = {
   position: "absolute",
   top: "50%",
   left: "50%",

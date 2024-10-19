@@ -47,4 +47,4 @@ const CatItem = () => {
     )
 }
 
-export default CatItem
+export default CatItem;
