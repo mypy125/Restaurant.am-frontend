@@ -9,9 +9,9 @@ const HomePage = () => {
         <div>
             <section className='-z-50 banner relative flex flex-col justify-center items-center'>
                 <div className='w-[50vw] z-10 text-center'>
-                    <p className='text-2xl lg:text-7xl font-bold z-10 py-5'>Taco Cloud</p>
+                    <p className='text-2xl lg:text-7xl font-bold z-10 py-5'>Restaurant Cloud</p>
                     <p className='z-10 text-gray-300 text-xl lg:text-4xl'>
-                        Test the Convenience: Food, Fast And Delivered
+                        test the convenience food, fast and delivered
                     </p>
                 </div>
                 <div className='cover absolute top-0 left-0 right-0'></div>
@@ -32,7 +32,7 @@ const HomePage = () => {
                     </h1>
                     <div className="flex flex-wrap items-center justify-around">
                         {restaurants.map((item, index) => (
-                            <RestaurantCard key={index} item={item} />
+                            <RestaurantCard key={`${item.name}-${index}`} item={item} index={index} />
                         ))}
                     </div>
                 </div>

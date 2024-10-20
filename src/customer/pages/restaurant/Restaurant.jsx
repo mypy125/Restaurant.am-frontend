@@ -3,16 +3,16 @@ import React, { useState } from "react";
 import MenuItemCard from "./MenuItemCard";
 
 const categories = [
-    "Khorovats (Barbecue)",
-    "Dolma",
-    "Lavash",
-    "Harissa",
-    "Manti",
-    "Lahmajoon",
-    "Khash",
-    "Ghapama",
-    "Basturma",
-    "Gata",
+    "appetizers",
+    "salads",
+    "soups",
+    "hot dishes",
+    "dough dishes",
+    "kebab dishes",
+    "fish",
+    "side dishes",
+    "lunch",
+    "sauce",
 ]
 
 const foodType = ["Vegetarian Only", "Non-Vegetarian Only", "Both"]

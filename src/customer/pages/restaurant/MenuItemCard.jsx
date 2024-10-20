@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 
-const MenuItemCard = ({ item }) => {
+const MenuItemCard = ({item}) => {
     const handleAddItemToCart = () => {
-        console.log("handleAddItemToCart");
+        console.log(`Added ${item.name} to the cart!`);
     };
 
     return (
@@ -16,7 +17,7 @@ const MenuItemCard = ({ item }) => {
                     alt="Pizza"
                 />
                 <div className="space-y-1 lg:space-y-5 lg:max-w-2xl">
-                    <p className="font-semibold text-xl">Pizza</p>
+                <p className="font-semibold text-xl">Pizza</p>
                     <p>2999</p>
                     <p className="text-gray-500">
                         Pizza is an Italian food that was created in Italy (The Naples area).
