@@ -3,7 +3,6 @@ import './App.css';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { darkTheme } from './theme/DarkTheme';
 import Routers from './routers/Routers';
-import { useDispatch } from 'react-redux';
 
 class App extends Component {
   render() {

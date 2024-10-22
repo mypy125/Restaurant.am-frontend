@@ -11,10 +11,19 @@ const Navbar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const openMenu = Boolean(anchorEl);
     const navigate = useNavigate();
+    // const {auth}=useSelector(store=>store);
     const isLoggedIn = false;
 
     const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
     const handleCloseMenu = () => setAnchorEl(null);
+
+    const handleAvatarClick= ()=> {
+        if(auth.user?.role==="CUSTOMER"){
+            navigate("/my-profile")
+        }else{
+            navigate("/admin/restaurant")
+        }
+    }
 
     const handleLogOut = () => {
         console.log("handle log out");
@@ -29,9 +38,9 @@ const Navbar = () => {
                 className="cursor-pointer flex items-center space-x-4"
                 onClick={() => navigate("/")}
             >
-                <span className="logo font-semibold text-gray-300 text-2xl">
-                    Taco Food
-                </span>
+                <li onClick={()=> navigate("/")} className="logo font-semibold text-gray-300 text-2xl">
+                    Restaurant.am
+                </li>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -40,7 +49,10 @@ const Navbar = () => {
                 </IconButton>
             
                 {isLoggedIn ? (
-                    <Avatar sx={{bgcolor: "white", color: pink.A400}}>G</Avatar>
+                    <Avatar onClick={handleAvatarClick} sx={{bgcolor: "white", color: pink.A400}}>
+                        {/* {auth.user?.fullname[0].toUpperCase()}  */}
+                        G
+                        </Avatar>
                 ) : (
                     <IconButton
                         aria-label="Profile"

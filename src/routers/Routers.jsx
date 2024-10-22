@@ -9,9 +9,11 @@ const Routers = () => {
     const jwt=localStorage.getItem("jwt")
     const {auth}=useSelector(store=>store)
     
-    useEffect(()=> {
-        dispatch(getUser(auth.jwt || jwt));
-    },[auth.jwt]);
+    useEffect(() => {
+        if (jwt) {
+            dispatch(getUser(auth.jwt || jwt));
+        }
+    },[auth.jwt, dispatch]);
 
     return (
         <Routes>

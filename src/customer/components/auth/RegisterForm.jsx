@@ -10,7 +10,7 @@ const initialValues = {
   fullname: "",
   email: "",
   password: "",
-  role: "ROLE_CUSTOMER",
+  role: "CUSTOMER",
 };
 
 const RegisterForm = () => {
@@ -68,8 +68,9 @@ const RegisterForm = () => {
               value={values.role}
               onChange={handleChange}
             >
-              <MenuItem value="ROLE_CUSTOMER">Customer</MenuItem>
-              <MenuItem value="ROLE_RESTAURANT_OWNER">Restaurant_Owner</MenuItem>
+              <MenuItem value="CUSTOMER">Customer</MenuItem>
+              <MenuItem value="OWNER">Owner</MenuItem>
+              <MenuItem value="ADMIN">Admin</MenuItem>
             </FormikField>
 
             <Button

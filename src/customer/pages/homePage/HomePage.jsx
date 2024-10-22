@@ -9,9 +9,9 @@ const HomePage = () => {
         <div>
             <section className='-z-50 banner relative flex flex-col justify-center items-center'>
                 <div className='w-[50vw] z-10 text-center'>
-                    <p className='text-2xl lg:text-7xl font-bold z-10 py-5'>Restaurant Cloud</p>
-                    <p className='z-10 text-gray-300 text-xl lg:text-4xl'>
-                        test the convenience food, fast and delivered
+                    <p className='text-2xl lg:text-7xl font-bold z-10 py-5'>Restaurant.am</p>
+                    <p className='z-10 text-gray-200 text-xl lg:text-2xl'>
+                    Savor the authentic taste of Armenian cuisine — tradition and aroma in every dish!
                     </p>
                 </div>
                 <div className='cover absolute top-0 left-0 right-0'></div>
