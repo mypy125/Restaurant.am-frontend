@@ -2,11 +2,20 @@ import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import { authReducer } from "./authentication/Reducer";
 import { thunk } from "redux-thunk";
 import restaurantReducer from "./restaurant/Reducer";
+import menuItemsReducer from "./menu/Reducer";
+import cartReducer from "./cart/Reducer";
+import orderReducer from "./order/Reducer";
+import ingredientReducer from "./ingredients/Reducer";
+import restaurantsOrderReducer from "./restaurantOrder/Reducer";
 
-const rooteReducer=combineReducers({
+const rootReducer = combineReducers({
     auth: authReducer,
-    restaurant: restaurantReducer
-
+    restaurant: restaurantReducer,
+    menu: menuItemsReducer,
+    cart: cartReducer,
+    order: orderReducer,
+    restaurantOrder: restaurantsOrderReducer,
+    ingredients: ingredientReducer,
 });
 
-export const store=legacy_createStore(rooteReducer,applyMiddleware(thunk));
+export const store = legacy_createStore(rootReducer, applyMiddleware(thunk));

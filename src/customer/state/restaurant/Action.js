@@ -1,4 +1,3 @@
-import axios from "axios";
 import { api } from "../../config/api";
 import {
   CREATE_CATEGORY_FAILURE, CREATE_CATEGORY_REQUEST, CREATE_CATEGORY_SUCCESS,

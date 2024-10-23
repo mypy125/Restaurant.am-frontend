@@ -5,6 +5,7 @@ import { ADD_TO_FAVORITE_FAILURE, ADD_TO_FAVORITE_REQUEST,
     LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./ActionType"
 import { api, API_URL } from "../../config/api"
 
+
 export const registerUser=(reqData)=>async(dispatch)=> {
     dispatch({type:REGISTER_REQUEST})
 
@@ -36,20 +37,22 @@ export const loginUser=(reqData)=>async(dispatch)=> {
 
         const {data}=await axios.post(`${API_URL}/auth/signin`,reqData.userData);
         
-        if(data.jwt)localStorage.setItem("jwt",data.jwt);
-
-        if(data.role==="OWNER" || "ADMIN"){
-            reqData.navigate("/admin/restaurant");
+        if (data.jwt) {
+            localStorage.setItem("jwt", data.jwt);
         }
-        else{
+
+        if (data.role === "OWNER" || data.role === "ADMIN") {
+            reqData.navigate("/admin/restaurant");
+        } else {
             reqData.navigate("/");
         }
         dispatch({type:LOGIN_SUCCESS,payload:data.jwt});
         console.log("login success",data);
         
     } catch (error) {
-        dispatch({type:LOGIN_FAILURE,payload:error.response?.data || error.message });
-        console.log("login error", error);
+        const errorMessage = error.response?.data || error.message;
+        dispatch({ type: LOGIN_FAILURE, payload: errorMessage });
+        console.error("Login error", errorMessage);
     }
 };
 
@@ -58,7 +61,7 @@ export const getUser=(jwt)=>async(dispatch)=> {
 
     try {
 
-        const {data}=await api.get(`/api/users/profile`,{
+        const {data}=await api.post(`/api/users/profile`,{
             headers:{
                 Authorization:`Bearer ${jwt}`
             }
