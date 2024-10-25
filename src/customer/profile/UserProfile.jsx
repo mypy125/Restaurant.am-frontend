@@ -1,27 +1,27 @@
-import React from "react";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Button } from "@mui/material";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from '../state/authentication/Action'; 
 
 const UserProfile = () => {
-  const handleLogout =()=> {
+    const dispatch = useDispatch();
+    const { user, isLoading, error } = useSelector((state) => state.auth);
 
-  }
+    useEffect(() => {
+        dispatch(getUser());
+    }, [dispatch]);
 
-  return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center text-center">
-      <div className="flex flex-col items-center justify-center">
-        <AccountCircleIcon sx={{fontSize:"9rem"}}/>
-        <h1 className="py-5 text-2xl font-semibold">Gor Mkhitaryan</h1>
-        <p>Email: gor1990.mkhitatryan@gmail.com</p>
-        <Button 
-          variant="contained" 
-          onClick={handleLogout} 
-          sx={{margin:"2rem 0rem"}}>
-          Logout
-        </Button>
-      </div>
-    </div>
-  );
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+    if (!user) return <p>No user data found</p>;
+
+    return (
+        <div>
+            <h1>User Profile</h1>
+            <p>Name: {user.name}</p> 
+            <p>Email: {user.email}</p>
+            <p>Favorites: {user.favorites?.map(item => <span key={item.id}>{item.name}</span>)}</p>
+        </div>
+    );
 };
 
 export default UserProfile;

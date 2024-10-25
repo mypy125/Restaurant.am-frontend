@@ -10,21 +10,24 @@ const Auth = () => {
     const navigate = useNavigate();
 
     const handleOnClose = () => {
-        navigate("/")
-    }
+        navigate("/");
+    };
+
+    const isRegisterPage = location.pathname === "/account/register";
+    const isLoginPage = location.pathname === "/account/login";
+    const isModalOpen = isRegisterPage || isLoginPage;
 
     return (
-     <>
-        <Modal onClose={handleOnClose} open={
-            location.pathname==="/account/register"
-            || location.pathname==="/account/login"
-        }>
-
-           <Box sx={style}>
-                {location.pathname==="/account/register"?<RegisterForm/>:<LoginForm/>}
-           </Box>
+        <Modal
+            onClose={handleOnClose}
+            open={isModalOpen}
+            aria-labelledby="auth-modal-title"
+            aria-describedby="auth-modal-description"
+        >
+            <Box sx={style}>
+                {isRegisterPage ? <RegisterForm /> : <LoginForm />}
+            </Box>
         </Modal>
-     </>
     );
 };
 

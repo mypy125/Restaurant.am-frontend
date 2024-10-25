@@ -1,24 +1,48 @@
 import { Card, FormControlLabel, Radio, Divider, FormControl, RadioGroup, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import MenuItemCard from "./MenuItemCard";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { getResaurantById, getRestaurantsCategory } from "../../state/restaurant/Action";
 
-const categories = [
-    "appetizers",
-    "salads",
-    "soups",
-    "hot dishes",
-    "dough dishes",
-    "kebab dishes",
-    "fish",
-    "side dishes",
-    "lunch",
-    "sauce",
+// const categories = [
+//     "appetizers",
+//     "salads",
+//     "soups",
+//     "hot dishes",
+//     "dough dishes",
+//     "kebab dishes",
+//     "fish",
+//     "side dishes",
+//     "lunch",
+//     "sauce",
+// ]
+
+const foodType = [
+    "Vegetarian Only", 
+    "Non-Vegetarian Only", 
+    "Both"
 ]
 
-const foodType = ["Vegetarian Only", "Non-Vegetarian Only", "Both"]
 const menu = [1,1,1,1,1,1,1]
 
 const Restaurant = () => {
+    const [isFavorite, setIsFavorite] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+    const {auth, restaurant}=useSelector(store=>store);
+
+    const {id, city}=useParams();
+
+    console.log("restaurant", restaurant);
+
+    useEffect(()=> {
+        dispatch(getResaurantById({jwt,restaurantId:id}))
+        dispatch(getRestaurantsCategory({jwt, restaurantId:id}))
+
+    },[])
+
     const [selectedCategory, setSelectedCategory] = useState();
     const [selectedFoodType, setSelectedFoodType] = useState();
 
@@ -39,14 +63,29 @@ const Restaurant = () => {
                     {`Home/Armenia/Taco Restaurant/2/Order Online`}
                 </h3>
                 <div>
-                    <img className="w-full h-[40vh] object-cover" 
-                         src="https://images.unsplash.com/photo-1508006728353-6ecef00dcbb8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDEzfHx8ZW58MHx8fHx8" 
-                         alt="" />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <img className="w-full h-[40vh] object-cover" 
+                            src={restaurant.restaurant?.image[0]}
+                            alt="" />
+                        </Grid>
+                        <Grid item xs={12} lg={6}>
+                            <img className="w-full h-[40vh] object-cover" 
+                            src={restaurant.restaurant?.image[1]}
+                            alt="" />
+                        </Grid>
+                        <Grid item xs={12} lg={6}>
+                            <img className="w-full h-[40vh] object-cover" 
+                            src={restaurant.restaurant?.image[2]}
+                            alt="" />
+                        </Grid>
+                    </Grid>
+                    
                 </div>
                 <div>
-                    <h1 className="text-4xl py-1 font-semibold">{`Taco Restaurant`}</h1>
-                    <p className="text-gray-500">
-                        A modern take on traditional cuisine.
+                    <h1 className="text-4xl py-1 font-semibold">{restaurant.restaurant?.name}</h1>
+                    <p className="text-gray-500 mt-1">
+                        {restaurant.restaurant?.description}
                     </p>
                     <p className="py-3 text-orange-300">
                         Open now 10:00am - 22:30am (Today)
@@ -64,12 +103,12 @@ const Restaurant = () => {
                             </Typography>
                             <FormControl component={"fieldset"}>
                                 <RadioGroup name="category" value={selectedCategory} onChange={handleCategoryChange}>
-                                    {categories.map((item, index) => (
+                                    {restaurant.categories.map((item) => (
                                         <FormControlLabel
-                                            key={index}
+                                            key={item}
                                             value={item}
                                             control={<Radio />}
-                                            label={item}
+                                            label={item.name}
                                             sx={{ color: "gray" }}
                                         />
                                     ))}

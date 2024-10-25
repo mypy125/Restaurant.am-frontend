@@ -1,4 +1,4 @@
-import { api } from "../../config/api";
+import { api, API_URL } from "../../config/api";
 import {
     CREATE_MENU_ITEM_FAILURE,
     CREATE_MENU_ITEM_REQUEST,
@@ -25,7 +25,7 @@ export const createMenuItem = ({ menu, jwt }) => async (dispatch) => {
     dispatch({ type: CREATE_MENU_ITEM_REQUEST });
 
     try {
-        const { data } = await api.post(`/api/admin/food`, menu, {
+        const { data } = await api.post(`${API_URL}/api/admin/food`, menu, {
             headers: { Authorization: `Bearer ${jwt}` },
         });
         dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: data });
@@ -39,7 +39,7 @@ export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
 
     try {
         const { data } = await api.get(
-            `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
+            `${API_URL}/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
             { headers: { Authorization: `Bearer ${reqData.jwt}` } }
         );
         dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_SUCCESS, payload: data });
@@ -52,7 +52,7 @@ export const searchMenuItem = ({ keyword, jwt }) => async (dispatch) => {
     dispatch({ type: SEARCH_MENU_ITEM_REQUEST });
 
     try {
-        const { data } = await api.get(`/api/food/search?name=${keyword}`, {
+        const { data } = await api.get(`${API_URL}/api/food/search?name=${keyword}`, {
             headers: { Authorization: `Bearer ${jwt}` },
         });
         dispatch({ type: SEARCH_MENU_ITEM_SUCCESS, payload: data });
@@ -65,7 +65,7 @@ export const updateMenuItemsAvailability = ({ foodId, jwt }) => async (dispatch)
     dispatch({ type: UPDATE_MENU_ITEMS_AVAILABLITY_REQUEST });
 
     try {
-        const { data } = await api.put(`/api/admin/food/${foodId}`, {}, {
+        const { data } = await api.put(`${API_URL}/api/admin/food/${foodId}`, {}, {
             headers: { Authorization: `Bearer ${jwt}` },
         });
         dispatch({ type: UPDATE_MENU_ITEMS_AVAILABLITY_SUCCESS, payload: data });
@@ -78,7 +78,7 @@ export const deleteFoodAction = ({ foodId, jwt }) => async (dispatch) => {
     dispatch({ type: DELETE_MENU_ITEM_REQUEST });
 
     try {
-        await api.delete(`/api/admin/food/${foodId}`, {
+        await api.delete(`${API_URL}/api/admin/food/${foodId}`, {
             headers: { Authorization: `Bearer ${jwt}` },
         });
         dispatch({ type: DELETE_MENU_ITEM_SUCCESS, payload: foodId });

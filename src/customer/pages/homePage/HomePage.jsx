@@ -8,16 +8,17 @@ import { getAllResaurantsAction } from "../../state/restaurant/Action";
 const HomePage = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-    const { restaurants, loading } = useSelector((state) => state.restaurant);
+    const { restaurants, loading, error } = useSelector((state) => state.restaurant);
 
     useEffect(() => {
-        if (jwt) {
+        if (jwt && !restaurants.length) {  
             dispatch(getAllResaurantsAction(jwt));
         }
-    }, [jwt]);
+    }, [jwt, dispatch, restaurants.length]);
 
     return (
         <div>
+            {/* Banner Section */}
             <section className="-z-50 banner relative flex flex-col justify-center items-center">
                 <div className="w-[50vw] z-10 text-center">
                     <p className="text-2xl lg:text-7xl font-bold z-10 py-5">Restaurant.am</p>
@@ -29,6 +30,7 @@ const HomePage = () => {
                 <div className="fadout"></div>
             </section>
 
+            {/* Top Meals Section */}
             <section className="p-10 lg:py-10 lg:px-20">
                 <div>
                     <p className="text-2xl font-semibold text-gray-400 py-3 pb-10">Top Meals</p>
@@ -36,6 +38,7 @@ const HomePage = () => {
                 <MultipleItemCorusel />
             </section>
 
+            {/* Restaurant List Section */}
             <section className="px-5 lg:px-20">
                 <div>
                     <h1 className="text-2xl font-semibold text-gray-400 py-3">
@@ -44,7 +47,9 @@ const HomePage = () => {
                     <div className="flex flex-wrap items-center justify-around">
                         {loading ? (
                             <p>Loading restaurants...</p>
-                        ) : restaurants && restaurants.length > 0 ? (
+                        ) : error ? (
+                            <p className="text-red-500">Failed to load restaurants. Please try again later.</p>
+                        ) : restaurants.length > 0 ? (
                             restaurants.map((item, index) => (
                                 <RestaurantCard key={`${item.name}-${index}`} item={item} index={index} />
                             ))

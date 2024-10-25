@@ -1,4 +1,4 @@
-import { api } from "../../config/api";
+import { api, API_URL } from "../../config/api";
 import { 
     CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, 
     GET_USER_NOTIFICATION_FAILURE, GET_USER_NOTIFICATION_REQUEST, 
@@ -14,11 +14,10 @@ export const createOrder = ({ order, jwt }) => async (dispatch) => {
     dispatch({ type: CREATE_ORDER_REQUEST });
 
     try {
-        const { data } = await api.post(`/api/order/`, order, {
+        const { data } = await api.post(`${API_URL}/api/order/`, order, {
             headers: { Authorization: `Bearer ${jwt}` },
         });
 
-        // Optional: Redirect to payment URL if present
         if (data.payment_url) {
             window.location.href = data.payment_url;
         }
@@ -33,7 +32,7 @@ export const getUsersOrders = (jwt) => async (dispatch) => {
     dispatch({ type: GET_USER_ORDERS_REQUEST });
 
     try {
-        const { data } = await api.get(`/api/order/user`, {
+        const { data } = await api.get(`${API_URL}/api/order/user`, {
             headers: { Authorization: `Bearer ${jwt}` },
         });
         dispatch({ type: GET_USER_ORDERS_SUCCESS, payload: data });
@@ -46,7 +45,7 @@ export const getUserNotificationAction = () => async (dispatch) => {
     dispatch({ type: GET_USER_NOTIFICATION_REQUEST });
 
     try {
-        const { data } = await api.get(`/api/notifications`);
+        const { data } = await api.get(`${API_URL}/api/notifications`);
         dispatch({ type: GET_USER_NOTIFICATION_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: GET_USER_NOTIFICATION_FAILURE, payload: handleError(error) });
