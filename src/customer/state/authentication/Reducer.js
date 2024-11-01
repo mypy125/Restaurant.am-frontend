@@ -1,19 +1,29 @@
 import { isPresentInFavorites } from "../../config/logic";
-import ActionType, { 
-    ADD_TO_FAVORITE_FAILURE,ADD_TO_FAVORITE_REQUEST, ADD_TO_FAVORITE_SUCCESS,
-    GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS,
+import {
+    ADD_TO_FAVORITE_FAILURE,
+    ADD_TO_FAVORITE_REQUEST,
+    ADD_TO_FAVORITE_SUCCESS,
+    GET_USER_FAILURE,
+    GET_USER_REQUEST,
+    GET_USER_SUCCESS,
+    LOGIN_FAILURE,
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
     LOGOUT,
-    REGISTER_FAILURE, REGISTER_REQUEST,REGISTER_SUCCESS } from "./ActionType";
+    REGISTER_FAILURE,
+    REGISTER_REQUEST,
+    REGISTER_SUCCESS,
+} from "./ActionType";
 
-    const initialState = {
-        user: null,
-        isLoading: false,
-        error: null,
-        jwt: null,
-        favorites: [],
-        success: null,
-    };
-    
+const initialState = {
+    user: null,
+    isLoading: false,
+    error: null,
+    jwt: null,
+    favorites: [],
+    success: null,
+};
+
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case REGISTER_REQUEST:
@@ -24,19 +34,29 @@ export const authReducer = (state = initialState, action) => {
 
         case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
-            return { ...state, isLoading: false, jwt: action.payload, success: "Operation Successful" };
-
-        case GET_USER_SUCCESS:
-            return { ...state, isLoading: false, user: action.payload, favorites: action.payload.favorites };
-
-        case ADD_TO_FAVORITE_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                error: null,
-                favorites: isPresentInFavorites(state.favorites, action.payload)
-                    ? state.favorites.filter(item => item.id !== action.payload.id)
-                    : [action.payload, ...state.favorites],
+                jwt: action.payload,
+                success: "Operation Successful",
+            };
+
+        case GET_USER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                user: action.payload,
+                favorites: action.payload.favorites,
+            };
+
+        case ADD_TO_FAVORITE_SUCCESS:
+            const updatedFavorites = isPresentInFavorites(state.favorites, action.payload)
+                ? state.favorites.filter(item => item.id !== action.payload.id)
+                : [action.payload, ...state.favorites];
+            return {
+                ...state,
+                isLoading: false,
+                favorites: updatedFavorites,
             };
 
         case LOGOUT:
@@ -52,4 +72,3 @@ export const authReducer = (state = initialState, action) => {
             return state;
     }
 };
-    

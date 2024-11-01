@@ -1,11 +1,11 @@
-import { api, API_URL } from "../../config/api";
+import { api } from "../../config/api";
 import { CREATE_INGREDIENT_CATEGORY_SUCCESS, GET_INGREDIENT_CATEGORY_SUCCESS, 
     GET_INGREDIENTS, UPDATE_STOCK } from "./ActionTypes";
 
 export const getIngredientOfRestaurant = ({ id, jwt }) => async (dispatch) => {
 
     try {
-        const response = await api.get(`${API_URL}/api/admin/ingredients/restaurant/${id}`, {
+        const response = await api.get(`/api/admin/ingredients/restaurant/${id}`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
@@ -20,7 +20,7 @@ export const getIngredientOfRestaurant = ({ id, jwt }) => async (dispatch) => {
 export const createIngredient = ({ data, jwt }) => async (dispatch) => {
    
     try {
-        const response = await api.post(`${API_URL}/api/admin/ingredients`, data, {
+        const response = await api.post("/api/admin/ingredients", data, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
@@ -35,7 +35,7 @@ export const createIngredient = ({ data, jwt }) => async (dispatch) => {
 export const createIngredientCategory = ({ data, jwt }) => async (dispatch) => {
     console.log("data", data, "jwt",jwt);
     try {
-        const response = await api.post(`${API_URL}/api/admin/ingredients/category`, data, {
+        const response = await api.post("/api/admin/ingredients/category", data, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
@@ -50,7 +50,7 @@ export const createIngredientCategory = ({ data, jwt }) => async (dispatch) => {
 export const getIngredientCategory = ({ id, jwt }) => async (dispatch) => {
 
     try {
-        const response = await api.get(`${API_URL}/api/admin/ingredients/restaurant/${id}/category`, {
+        const response = await api.get(`/api/admin/ingredients/restaurant/${id}/category`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
@@ -65,7 +65,7 @@ export const getIngredientCategory = ({ id, jwt }) => async (dispatch) => {
 export const updateStockOfIngredient = ({ id, jwt }) => async (dispatch) => {
 
     try {
-        const { data } = await api.put(`${API_URL}/api/admin/ingredients/${id}/stock`, {}, {
+        const { data } = await api.put(`/api/admin/ingredients/${id}/stock`, {}, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }

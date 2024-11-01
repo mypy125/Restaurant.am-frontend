@@ -13,15 +13,13 @@ const MenuItemCard = ({item}) => {
             <div className="lg:flex items-center lg:space-x-5">
                 <img
                     className="w-[7rem] h-[7rem] object-cover"
-                    src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHx8fDA%3D"
-                    alt="Pizza"
+                    src={item.images[0]}
+                    alt=""
                 />
                 <div className="space-y-1 lg:space-y-5 lg:max-w-2xl">
-                <p className="font-semibold text-xl">Pizza</p>
-                    <p>2999</p>
-                    <p className="text-gray-500">
-                        Pizza is an Italian food that was created in Italy (The Naples area).
-                    </p>
+                <p className="font-semibold text-xl">{item.name}</p>
+                    <p>{item.price}</p>
+                    <p className="text-gray-500">{item.description}</p>
                 </div>
             </div>
 

@@ -1,8 +1,10 @@
-import { ADD_TO_FAVORITE_FAILURE, ADD_TO_FAVORITE_REQUEST, 
-    ADD_TO_FAVORITE_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST,
-    GET_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, 
-    LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./ActionType"
-import { api, API_URL } from "../../config/api"
+import { 
+    ADD_TO_FAVORITE_FAILURE, ADD_TO_FAVORITE_REQUEST, ADD_TO_FAVORITE_SUCCESS, 
+    GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, 
+    LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, 
+    LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS 
+} from "./ActionType";
+import { api } from "../../config/api";
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("jwt");
@@ -12,27 +14,27 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+const handleError = (error, failureType, dispatch) => {
+    const errorMessage = error.response?.data || error.message;
+    dispatch({ type: failureType, payload: errorMessage });
+    console.error(errorMessage);
+};
+
 export const registerUser = (reqData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST });
 
     try {
-        const { data } = await api.post(`${API_URL}/auth/signup`, reqData.userData);
+        const { data } = await api.post("/auth/signup", reqData.userData);
 
-        if (data.jwt) localStorage.setItem("jwt", data.jwt);
-
-        if (data.role === "OWNER" || data.role === "ADMIN") {
-            reqData.navigate("/admin/restaurant");
-        } else {
-            reqData.navigate("/");
+        if (data.jwt) {
+            localStorage.setItem("jwt", data.jwt);
         }
+
+        reqData.navigate(data.role === "OWNER" || data.role === "ADMIN" ? "/admin/restaurant" : "/");
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
-        console.log("register success", data);
+        console.log("Register success", data);
     } catch (error) {
-        dispatch({
-            type: REGISTER_FAILURE,
-            payload: error.response?.data || error.message,
-        });
-        console.log("register error", error);
+        handleError(error, REGISTER_FAILURE, dispatch);
     }
 };
 
@@ -40,49 +42,35 @@ export const loginUser = (reqData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST });
 
     try {
-        const { data } = await api.post(`${API_URL}/auth/signin`, reqData.userData);
+        const { data } = await api.post("/auth/signin", reqData.userData);
         
         if (data.jwt) {
             localStorage.setItem("jwt", data.jwt);
         }
 
-        if (data.role === "OWNER" || data.role === "ADMIN") {
-            reqData.navigate("/admin/restaurant");
-        } else {
-            reqData.navigate("/");
-        }
+        reqData.navigate(data.role === "OWNER" || data.role === "ADMIN" ? "/admin/restaurant" : "/");
         dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
-        console.log("login success", data);
+        console.log("Login success", data);
     } catch (error) {
-        const errorMessage = error.response?.data || error.message;
-        dispatch({ type: LOGIN_FAILURE, payload: errorMessage });
-        console.error("Login error", errorMessage);
+        handleError(error, LOGIN_FAILURE, dispatch);
     }
 };
 
 export const getUser = () => async (dispatch) => {
     dispatch({ type: GET_USER_REQUEST });
 
-    const jwt = localStorage.getItem("jwt"); 
-    if (!jwt) {
+    if (!localStorage.getItem("jwt")) {
         dispatch({ type: GET_USER_FAILURE, payload: "No token found" });
         return;
     }
 
     try {
-        const { data } = await api.get(`${API_URL}/api/users/profile`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`
-            }
-        });
-
+        const { data } = await api.get("/api/users/profile");
         dispatch({ type: GET_USER_SUCCESS, payload: data });
-        console.log("user profile", data);
+        console.log("User profile", data);
     } catch (error) {
-        const errorMessage = error.response?.data || error.message;
-        dispatch({ type: GET_USER_FAILURE, payload: errorMessage });
-        console.log("get user error", errorMessage);
-
+        handleError(error, GET_USER_FAILURE, dispatch);
+        
         if (error.response?.status === 401) {
             dispatch({ type: LOGOUT });
         }
@@ -92,34 +80,26 @@ export const getUser = () => async (dispatch) => {
 export const addToFavorite = ({ restaurantId }) => async (dispatch) => {
     dispatch({ type: ADD_TO_FAVORITE_REQUEST });
 
-    const jwt = localStorage.getItem("jwt"); 
-    if (!jwt) {
+    if (!localStorage.getItem("jwt")) {
         dispatch({ type: ADD_TO_FAVORITE_FAILURE, payload: "No token found" });
         return;
     }
 
     try {
-        const { data } = await api.put(`${API_URL}/api/restaurants/${restaurantId}/add-favorites`, {});
-
+        const { data } = await api.put(`/api/restaurants/${restaurantId}/add-favorites`);
         dispatch({ type: ADD_TO_FAVORITE_SUCCESS, payload: data });
-        console.log("added to favorites", data);
-        
+        console.log("Added to favorites", data);
     } catch (error) {
-        dispatch({ type: ADD_TO_FAVORITE_FAILURE, payload: error.response?.data || error.message });
-        console.log("add to favorite error", error);
+        handleError(error, ADD_TO_FAVORITE_FAILURE, dispatch);
     }
 };
 
-
-export const logout=()=>async(dispatch)=> {
-
+export const logout = () => async (dispatch) => {
     try {
-
         localStorage.clear();
-        dispatch({type:LOGOUT})
-        console.log("logout success")  
-        
+        dispatch({ type: LOGOUT });
+        console.log("Logout success");
     } catch (error) {
-        console.log("error", error)
+        console.error("Logout error", error);
     }
-}
+};
