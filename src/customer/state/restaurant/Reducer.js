@@ -1,6 +1,6 @@
 import * as actionTypes from "./ActionType"
 
-const initialState={
+const initialState = {
     restaurants: [],
     userRestaurant: null,
     restaurant: null,
@@ -9,7 +9,6 @@ const initialState={
     events: [],
     restaurantsEvents: [],
     categories: [],
-    
 };
 
 const restaurantReducer= (state = initialState, action) => {
@@ -30,7 +29,7 @@ const restaurantReducer= (state = initialState, action) => {
             return{...state, loading: false, restaurants:action.payload};
 
         case actionTypes.GET_RESTAURANT_BY_ID_SUCCESS:
-            return{...state, loading: false, restaurant:action.payload};
+            return { ...state, loading: false, restaurant: action.payload };
 
         case actionTypes.GET_RESTAURANT_BY_USER_ID_SUCCESS:
             case actionTypes.UPDATE_RESTAURANT_STATUS_SUCCESS:

@@ -82,12 +82,15 @@ const RegisterForm = () => {
                             margin="normal"
                             variant="outlined"
                             error={Boolean(errors.role && touched.role)} 
+                            defaultValue="CUSTOMER"
                         >
                             <MenuItem value="CUSTOMER">Customer</MenuItem>
                             <MenuItem value="OWNER">Owner</MenuItem>
                             <MenuItem value="ADMIN">Admin</MenuItem>
                         </FormikField>
-                        {errors.role && touched.role && <Typography color="error" variant="body2">{errors.role}</Typography>}
+                        {errors.role && touched.role && (
+                            <Typography color="error" variant="body2">{errors.role}</Typography>
+                        )}
                         <Button
                             sx={{ mt: 2, padding: "1rem" }}
                             fullWidth

@@ -2,7 +2,7 @@ import React from "react";
 import RestaurantCard from "../pages/homePage/RestaurantCard";
 import { useSelector } from "react-redux";
 
-const Favorites = () => {
+export default function Favorites () {
 //   const favoriteRestaurants = JSON.parse(localStorage.getItem("favorites")) || [];
   const {auth}=useSelector(store=>store);
 
@@ -16,4 +16,3 @@ const Favorites = () => {
     );
 };
 
-export default Favorites;

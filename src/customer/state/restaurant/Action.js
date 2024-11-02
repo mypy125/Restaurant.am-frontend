@@ -40,17 +40,23 @@ export const getAllResaurantsAction = (token) => async (dispatch) => {
   }
 };
 
-export const getResaurantById = ({restaurantId, jwt}) => async (dispatch) => {
+export const getRestaurantById = (reqData) => async (dispatch) => {
   dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
+  console.log(`Fetching restaurant with ID: ${reqData.restaurantId}`);
+  
   try {
-    const { data } = await api.get(`/api/restaurants/${restaurantId}`, {
-      headers: { Authorization: `Bearer ${jwt}` },
+    const { data } = await api.get(`/api/restaurants/${reqData.restaurantId}`, {
+      headers: { Authorization: `Bearer ${reqData.jwt}` },
     });
+    console.log('Fetched data:', data);
     dispatch({ type: GET_RESTAURANT_BY_ID_SUCCESS, payload: data });
   } catch (error) {
+    console.error('Error fetching restaurant:', error);
     dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: handleError(error) });
   }
 };
+
+
 
 export const getResaurantByUserId = (jwt) => async (dispatch) => {
   dispatch({ type: GET_RESTAURANT_BY_USER_ID_REQUEST });
@@ -181,10 +187,10 @@ export const createCategoryAction = (reqData, jwt) => async (dispatch) => {
   }
 };
 
-export const getRestaurantsCategory = (jwt, restaurantId) => async (dispatch) => {
+export const getRestaurantsCategory = (jwt, reqData) => async (dispatch) => {
   dispatch({ type: GET_RESTAIRANTS_CATEGORY_REQUEST });
   try {
-    const { data } = await api.get(`/api/category/restaurant/${restaurantId}`, {
+    const { data } = await api.get(`/api/category/restaurant/${reqData.restaurantId}`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
     dispatch({ type: GET_RESTAIRANTS_CATEGORY_SUCCESS, payload: data });

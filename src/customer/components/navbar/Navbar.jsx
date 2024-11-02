@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
-import { Avatar, Box, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import "./Navbar.css";
 
@@ -20,11 +20,7 @@ const Navbar = () => {
     const handleCloseMenu = () => setAnchorEl(null);
 
     const handleAvatarClick = () => {
-        if (user.role === "CUSTOMER") {
-            navigate("/my-profile");
-        } else {
-            navigate("/admin/restaurant");
-        }
+        navigate(user.role === "CUSTOMER" ? "/my-profile" : "/admin/restaurant");
     };
 
     const handleLogOut = () => {
@@ -40,12 +36,9 @@ const Navbar = () => {
                 className="cursor-pointer flex items-center space-x-4"
                 onClick={() => navigate("/")}
             >
-                <li
-                    onClick={() => navigate("/")}
-                    className="logo font-semibold text-gray-300 text-2xl"
-                >
+                <Typography variant="h6" className="logo font-semibold text-gray-300">
                     Restaurant.am
-                </li>
+                </Typography>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -76,6 +69,8 @@ const Navbar = () => {
                     aria-expanded={openMenu ? "true" : undefined}
                     onClick={handleOpenMenu}
                     className="font-semibold cursor-pointer"
+                    tabIndex={0} 
+                    role="button"
                 >
                     {user.fullname || "Profile"}
                 </span>
@@ -89,10 +84,10 @@ const Navbar = () => {
                         "aria-labelledby": "basic-button",
                     }}
                 >
-                    <MenuItem onClick={() => navigate("/my-profile")}>
+                    <MenuItem onClick={() => { handleCloseMenu(); navigate("/my-profile"); }}>
                         Profile
                     </MenuItem>
-                    <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+                    <MenuItem onClick={() => { handleCloseMenu(); handleLogOut(); }}>Logout</MenuItem>
                 </Menu>
 
                 <IconButton aria-label="Cart" onClick={() => navigate("/cart")}>

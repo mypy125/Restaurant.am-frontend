@@ -3,6 +3,9 @@ import {
     ADD_TO_FAVORITE_FAILURE,
     ADD_TO_FAVORITE_REQUEST,
     ADD_TO_FAVORITE_SUCCESS,
+    REMOVE_FROM_FAVORITE_REQUEST,
+    REMOVE_FROM_FAVORITE_SUCCESS,
+    REMOVE_FROM_FAVORITE_FAILURE,
     GET_USER_FAILURE,
     GET_USER_REQUEST,
     GET_USER_SUCCESS,
@@ -58,6 +61,19 @@ export const authReducer = (state = initialState, action) => {
                 isLoading: false,
                 favorites: updatedFavorites,
             };
+
+        case REMOVE_FROM_FAVORITE_REQUEST:
+            return { ...state, isLoading: true, error: null };
+
+        case REMOVE_FROM_FAVORITE_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                favorites: state.favorites.filter(item => item.id !== action.payload.id),
+            };
+
+        case REMOVE_FROM_FAVORITE_FAILURE:
+                return { ...state, isLoading: false, error: action.payload };
 
         case LOGOUT:
             return initialState;

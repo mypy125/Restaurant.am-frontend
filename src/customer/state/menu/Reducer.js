@@ -34,9 +34,12 @@ const menuItemsReducer = (state = initialState, action) => {
                 };
     
         case actionTypes.UPDATE_MENU_ITEMS_AVAILABLITY_SUCCESS:
-            console.log("update items id ", action.payload.id)
-            return{...state, loading:false, menuItems:state.menuItems.filter(
-                (menuItem)=> menuItem.id === action.payload.id?action.payload:menuItem),
+            return {
+                ...state,
+                loading: false,
+                menuItems: state.menuItems.map((menuItem) =>
+                    menuItem.id === action.payload.id ? action.payload : menuItem
+                ),
             };
 
         case actionTypes.SEARCH_MENU_ITEM_SUCCESS:

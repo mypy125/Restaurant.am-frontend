@@ -1,4 +1,5 @@
 import { 
+    REMOVE_FROM_FAVORITE_REQUEST,REMOVE_FROM_FAVORITE_SUCCESS,REMOVE_FROM_FAVORITE_FAILURE,
     ADD_TO_FAVORITE_FAILURE, ADD_TO_FAVORITE_REQUEST, ADD_TO_FAVORITE_SUCCESS, 
     GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, 
     LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, 
@@ -93,6 +94,24 @@ export const addToFavorite = ({ restaurantId }) => async (dispatch) => {
         handleError(error, ADD_TO_FAVORITE_FAILURE, dispatch);
     }
 };
+
+export const removeFromFavorite = (restaurantId) => async (dispatch) => {
+    dispatch({ type: REMOVE_FROM_FAVORITE_REQUEST });
+
+    if (!localStorage.getItem("jwt")) {
+        dispatch({ type: REMOVE_FROM_FAVORITE_FAILURE, payload: "No token found" });
+        return;
+    }
+
+    try {
+        const { data } = await api.put(`/api/restaurants/${restaurantId}/remove-favorites`);
+        dispatch({ type: REMOVE_FROM_FAVORITE_SUCCESS, payload: data });
+        console.log("Removed from favorites", data);
+    } catch (error) {
+        handleError(error, REMOVE_FROM_FAVORITE_FAILURE, dispatch);
+    }
+};
+
 
 export const logout = () => async (dispatch) => {
     try {

@@ -15,7 +15,6 @@ const Profile = () => {
             <div className="sticky h-[80vh] lg:w-[20%]">
                 <ProfileNavigation open={openSideBar} />
             </div>
-
             <div className="lg:w-[80%]">
                 <Routes>
                     <Route path="/" element={<UserProfile />} />

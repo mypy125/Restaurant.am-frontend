@@ -6,25 +6,14 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addToFavorite } from "../../state/authentication/Action";
 
-const RestaurantCard = ({ item, index }) => {
+const RestaurantCard = ({ item }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-    const { auth } = useSelector((store) => store);
-
-    const handleAddToFavorite = () => {
-        dispatch(addToFavorite({ restaurantId: item.id, jwt }));
-    };
-
-    const handleNavigateToRestaurant = () => {
-        if (item.open) {
-            navigate(`/restaurant/${item.address.city}/${item.name}/${item.id}`);
-        }
-    };
 
     const getFavorites = useCallback(() => {
         try {
@@ -49,18 +38,21 @@ const RestaurantCard = ({ item, index }) => {
                 : [...favorites, item];
 
             localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+            if (!prev) {
+                dispatch(addToFavorite({ restaurantId: item.id, jwt }));
+            }
             return !prev;
         });
-    }, [item, getFavorites]);
+    }, [item, getFavorites, dispatch, jwt]);
 
     const handleCardClick = () => {
-        const encodedCity = encodeURIComponent(item.city || "");
-        const encodedName = encodeURIComponent(item.name || "");
-        navigate(`/restaurant/${encodedCity}/${encodedName}/${index + 1}`);
+        const encodedCity = encodeURIComponent(item.address?.city || "Unknown City");
+        const encodedName = encodeURIComponent(item.name || "Unnamed Restaurant");
+        navigate(`/restaurant/${encodedCity}/${encodedName}/${item.id}`);
     };
 
-    if (!item.name) {
-        return <div className="m-5">Item not found</div>;
+    if (!item || !item.name) {
+        return <div className="m-5">Restaurant not found</div>;
     }
 
     return (
@@ -70,7 +62,7 @@ const RestaurantCard = ({ item, index }) => {
         >
             <img
                 className="w-full h-[10rem] rounded-t-md object-cover"
-                src={item.imageUrl}
+                src={item.images[0] || "https://via.placeholder.com/150"}
                 alt={item.name || "Restaurant Image"}
                 onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
             />
@@ -82,12 +74,12 @@ const RestaurantCard = ({ item, index }) => {
             />
             <div className="p-4 textPart lg:flex w-full justify-between">
                 <div className="space-y-1">
-                    <p onClick={handleNavigateToRestaurant} className="font-semibold text-lg cursor-pointer">{item.name}</p>
+                    <p className="font-semibold text-lg cursor-pointer">{item.name}</p>
                     <p className="text-gray-500 text-sm">
-                        {item.description.length > 40 ? `${item.description.substring(0, 40)}...` : item.description}
+                        {item.description?.length > 40 ? `${item.description.substring(0, 40)}...` : item.description || "No description available."}
                     </p>
                 </div>
-                <IconButton onClick={toggleFavorite}>
+                <IconButton onClick={toggleFavorite} aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}>
                     {isFavorite ? <FavoriteIcon color="primary" /> : <FavoriteBorderIcon />}
                 </IconButton>
             </div>
@@ -97,13 +89,14 @@ const RestaurantCard = ({ item, index }) => {
 
 RestaurantCard.propTypes = {
     item: PropTypes.shape({
-        name: PropTypes.string,
-        city: PropTypes.string,
-        imageUrl: PropTypes.string,
-        description: PropTypes.string,
-        open: PropTypes.bool,
+        name: PropTypes.string.isRequired,
+        address: PropTypes.shape({
+            city: PropTypes.string, // Optional
+        }),
+        imageUrl: PropTypes.string, // Now optional
+        description: PropTypes.string, // Now optional
+        open: PropTypes.bool.isRequired,
     }).isRequired,
-    index: PropTypes.number.isRequired,
 };
 
 export default RestaurantCard;

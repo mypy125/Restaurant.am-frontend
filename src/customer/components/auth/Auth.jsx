@@ -1,7 +1,7 @@
-import { Box, Modal } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { style } from "../../pages/cart/Cart";
+import { style } from "../../pages/cart/Cart"; 
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 
@@ -25,6 +25,9 @@ const Auth = () => {
             aria-describedby="auth-modal-description"
         >
             <Box sx={style}>
+                <Typography id="auth-modal-title" variant="h6" component="h2">
+                    {isRegisterPage ? "Register" : "Login"}
+                </Typography>
                 {isRegisterPage ? <RegisterForm /> : <LoginForm />}
             </Box>
         </Modal>
