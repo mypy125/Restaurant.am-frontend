@@ -4,17 +4,19 @@ import MultipleItemCorusel from "./MultipleItemCorusel";
 import RestaurantCard from "./RestaurantCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllResaurantsAction } from "../../state/restaurant/Action";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-    const { restaurants, loading, error } = useSelector((state) => state.restaurant);
+    const { restaurants, loading, error } = useSelector(state => state.restaurant); 
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (jwt && !restaurants.length) {  
+        if (jwt) {
             dispatch(getAllResaurantsAction(jwt));
         }
-    }, [jwt, dispatch, restaurants.length]);
+    }, [dispatch, jwt]); 
 
     return (
         <div>
@@ -50,8 +52,8 @@ const HomePage = () => {
                         ) : error ? (
                             <p className="text-red-500">Failed to load restaurants. Please try again later.</p>
                         ) : restaurants.length > 0 ? (
-                            restaurants.map((item, index) => (
-                                <RestaurantCard key={`${item.name}-${index}`} item={item} index={index} />
+                            restaurants.map((item) => (
+                                <RestaurantCard  item={item} /> 
                             ))
                         ) : (
                             <p>No restaurants available at the moment.</p>

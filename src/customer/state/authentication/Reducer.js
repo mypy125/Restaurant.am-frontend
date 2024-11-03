@@ -53,9 +53,11 @@ export const authReducer = (state = initialState, action) => {
             };
 
         case ADD_TO_FAVORITE_SUCCESS:
-            const updatedFavorites = isPresentInFavorites(state.favorites, action.payload)
-                ? state.favorites.filter(item => item.id !== action.payload.id)
+            const isFavorite = isPresentInFavorites(state.favorites, action.payload);
+            const updatedFavorites = isFavorite
+                ? state.favorites.filter((item) => item.id !== action.payload.id)
                 : [action.payload, ...state.favorites];
+
             return {
                 ...state,
                 isLoading: false,
@@ -73,16 +75,14 @@ export const authReducer = (state = initialState, action) => {
             };
 
         case REMOVE_FROM_FAVORITE_FAILURE:
-                return { ...state, isLoading: false, error: action.payload };
-
-        case LOGOUT:
-            return initialState;
-
         case REGISTER_FAILURE:
         case LOGIN_FAILURE:
         case GET_USER_FAILURE:
         case ADD_TO_FAVORITE_FAILURE:
             return { ...state, isLoading: false, error: action.payload, success: null };
+
+        case LOGOUT:
+            return initialState;
 
         default:
             return state;

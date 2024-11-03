@@ -7,13 +7,11 @@ import {
     RadioGroup,
     Typography,
     Grid,
-    CircularProgress,
-    Alert
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import MenuItemCard from "./MenuItemCard";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getRestaurantById, getRestaurantsCategory } from "../../state/restaurant/Action";
 import { getMenuItemsByRestaurantId } from "../../state/menu/Action";
 
@@ -24,90 +22,87 @@ const Restaurant = () => {
     const [selectedFoodType, setSelectedFoodType] = useState(foodTypeOptions[0]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { id } = useParams();
     const jwt = localStorage.getItem("jwt");
-    const { restaurant } = useSelector((store) => store.restaurant);
-    const { menu } = useSelector((store) => store.menu);
+    const { restaurant } = useSelector((store) => store);
+    const { menu } = useSelector((store) => store);
+    // const { auth } = useSelector((store) => store.auth);
+    const { id } = useParams();
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             setError(null);
+            
             try {
-                await Promise.all([
-                    dispatch(getRestaurantById({ jwt, restaurantId: id })),
-                    dispatch(getRestaurantsCategory({ jwt, restaurantId: id })),
-                    dispatch(getMenuItemsByRestaurantId({ 
-                        jwt, 
-                        restaurantId: id, 
-                        vegetarian: false, 
-                        nonveg: false, 
-                        seasonal: true 
-                    }))
-                ]);
+                if (id && jwt) {
+                    await dispatch(getRestaurantById({ jwt, restaurantId: id }));
+                    await dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
+                    await dispatch(getMenuItemsByRestaurantId({
+                        jwt,
+                        restaurantId: id,
+                        vegetarian: false,
+                        nonveg: false,
+                        seasonal: true,
+                        foodCategory: "",
+                    }));
+                } else {
+                    setError("Invalid restaurant ID or JWT.");
+                }
             } catch (err) {
-                setError(err.message || "Failed to fetch restaurant data.");
-                console.error(err);
+                setError("Error fetching data. Please try again.");
             } finally {
                 setLoading(false);
             }
         };
+
         fetchData();
     }, [id, jwt, dispatch]);
 
-    const handleFoodTypeChange = (event) => {
-        setSelectedFoodType(event.target.value);
-    };
-
-    const handleCategoryChange = (event) => {
-        setSelectedCategory(event.target.value);
-    };
-
     if (loading) {
-        return <CircularProgress />;
+        return <div>Loading...</div>;
     }
 
     if (error) {
-        return <Alert severity="error">{error}</Alert>;
+        return <div>{error}</div>;
     }
 
-    if (!restaurant) {
-        return <div className="m-5">Restaurant not found</div>;
+    if (!restaurant || !restaurant.restaurant) {
+        return <div>No restaurant data available.</div>;
     }
 
     return (
         <div className="px-5 lg:px-20">
             <section>
                 <h3 className="text-gray-500 py-2 mt-10">
-                    {`Home/Armenia/${restaurant.name}/Order Online`}
+                    {`Home/Armenia/${restaurant.restaurant.name}/Order Online`}
                 </h3>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
+                    <img
+                        className="w-full h-[40vh] object-cover"
+                        src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 0 ? restaurant.restaurant.images[0] : "https://via.placeholder.com/150"}
+                        alt={restaurant.restaurant?.name}
+                    />
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
                         <img
                             className="w-full h-[40vh] object-cover"
-                            src={restaurant?.image?.[0] || "https://via.placeholder.com/150"}
-                            alt={restaurant?.name || "Restaurant Image"}
+                            src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 0 ? restaurant.restaurant.images[1] : "https://via.placeholder.com/150"}
+                            alt={restaurant.restaurant?.name}
                         />
                     </Grid>
                     <Grid item xs={12} lg={6}>
                         <img
                             className="w-full h-[40vh] object-cover"
-                            src={restaurant?.image?.[1] || "https://via.placeholder.com/150"}
-                            alt={restaurant?.name || "Restaurant Image"}
-                        />
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <img
-                            className="w-full h-[40vh] object-cover"
-                            src={restaurant?.image?.[2] || "https://via.placeholder.com/150"}
-                            alt={restaurant?.name || "Restaurant Image"}
+                            src={restaurant.restaurant?.images && restaurant.restaurant.images.length > 0 ? restaurant.restaurant.images[2] : "https://via.placeholder.com/150"}
+                            alt={restaurant.restaurant?.name}
                         />
                     </Grid>
                 </Grid>
-                <h1 className="text-4xl py-1 font-semibold">{restaurant.name}</h1>
-                <p className="text-gray-500 mt-1">{restaurant.description}</p>
+                <h1 className="text-4xl py-1 font-semibold">{restaurant.restaurant?.name}</h1>
+                <p className="text-gray-500 mt-1">{restaurant.restaurant?.description}</p>
                 <p className="py-3 text-orange-300">Open now 10:00am - 22:30pm (Today)</p>
             </section>
             <Divider />
@@ -117,16 +112,20 @@ const Restaurant = () => {
                         <div>
                             <Typography variant="h5" sx={{ paddingBottom: "1rem" }}>Category</Typography>
                             <FormControl component="fieldset">
-                                <RadioGroup name="category" value={selectedCategory} onChange={handleCategoryChange}>
-                                    {restaurant.categories?.map((item) => (
-                                        <FormControlLabel
-                                            key={item.id}
-                                            value={item.name}
-                                            control={<Radio />}
-                                            label={item.name}
-                                            sx={{ color: "gray" }}
-                                        />
-                                    ))}
+                                <RadioGroup name="category" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+                                    {restaurant.categories?.length > 0 ? (
+                                        restaurant.categories.map((item) => (
+                                            <FormControlLabel
+                                                key={item.id}
+                                                value={item.name}
+                                                control={<Radio />}
+                                                label={item.name}
+                                                sx={{ color: "gray" }}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Typography>No categories available</Typography>
+                                    )}
                                 </RadioGroup>
                             </FormControl>
                         </div>
@@ -134,7 +133,7 @@ const Restaurant = () => {
                         <div>
                             <Typography variant="h5" sx={{ paddingBottom: "1rem" }}>Food Type</Typography>
                             <FormControl component="fieldset">
-                                <RadioGroup name="foodType" value={selectedFoodType} onChange={handleFoodTypeChange}>
+                                <RadioGroup name="foodType" value={selectedFoodType} onChange={(e) => setSelectedFoodType(e.target.value)}>
                                     {foodTypeOptions.map((item) => (
                                         <FormControlLabel
                                             key={item}
@@ -150,7 +149,11 @@ const Restaurant = () => {
                     </Card>
                 </div>
                 <div className="lg:w-[80%] space-y-5 lg:pl-10">
-                    {menu?.map((item) => <MenuItemCard key={item.id} item={item} />)}
+                {menu.menuItems && menu.menuItems.length > 0 ? (
+                    menu.menuItems.map((item) => <MenuItemCard key={item.id} item={item} />)
+                ) : (
+                    <Typography>No menu items available</Typography>
+                )}                 
                 </div>
             </section>
         </div>
