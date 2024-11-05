@@ -1,29 +1,19 @@
-import React from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { FormControlLabel, FormGroup } from "@mui/material";
-import CheckBox from "@mui/material/Checkbox"; 
-import categorizeIngredients from '../../components/util/categorizeingredints.js';
+import { FormControlLabel, FormGroup, Typography } from "@mui/material";
+import CheckBox from "@mui/material/Checkbox";
+import categorizeIngredients from "../../components/util/categorizeingredints";
 
-const demo = [
-    {
-        category: "Nuts & seeds",
-        ingredients: ["Cashews"]
-    },
-    {
-        category: "Protein",
-        ingredients: ["Ground beef", "Bacon strips"] 
-    }
-];
-
-const MenuItemCard = React.memo(({ item }) => { 
-    const handleCheckBoxChange = (value) => {
-        console.log(value);
-    };
+const MenuItemCard = React.memo(({ item }) => {
+      
+    const handleCheckBoxChange = useCallback((ingredient) => {
+        console.log(ingredient);
+    }, []);
 
     const handleAddItemToCart = () => {
         console.log(`Added ${item.name} to the cart!`);
@@ -33,8 +23,8 @@ const MenuItemCard = React.memo(({ item }) => {
         <Accordion>
             <AccordionSummary 
                 expandIcon={<ExpandMoreIcon />} 
-                aria-controls="panel1a-content" 
-                id="panel1a-header"
+                aria-controls={`panel-${item.id}-content`} 
+                id={`panel-${item.id}-header`}
             >
                 <div className="lg:flex items-center justify-between">
                     <div className="lg:flex items-center lg:gap-5">
@@ -54,28 +44,36 @@ const MenuItemCard = React.memo(({ item }) => {
             <AccordionDetails>
                 <form>
                     <div className="flex gap-5 flex-wrap">
-                        {Object.entries(categorizeIngredients(item.ingredients)).map(([category, ingredients]) => ( 
+                        {Object.entries(categorizeIngredients(item.ingredients)).map(([category, ingredients]) => (
                             <div key={category}> 
-                                <p>{category}</p>
+                                <Typography variant="h6">{category}</Typography>
                                 <FormGroup>
-                                    {ingredients.map((ingredient) => ( 
-                                        <FormControlLabel 
-                                            key={ingredient} 
-                                            control={
-                                                <CheckBox 
-                                                    onChange={() => handleCheckBoxChange(ingredient)} 
-                                                />
-                                            } 
-                                            label={ingredient}
-                                        />
-                                    ))}
+                                    {ingredients.length > 0 ? (
+                                        ingredients.map((ingredient) => (
+                                            <FormControlLabel 
+                                                key={ingredient.name} 
+                                                control={
+                                                    <CheckBox 
+                                                        onChange={() => handleCheckBoxChange(ingredient)} 
+                                                    />
+                                                } 
+                                                label={ingredient.name} 
+                                            />
+                                        ))
+                                    ) : (
+                                        <Typography>No ingredients available</Typography>
+                                    )}
                                 </FormGroup>
                             </div>
                         ))}
                     </div>
                     <div>
-                        <Button variant="contained" disabled={false} type="submit">
-                           {true ? "Add To Cart" : "Out of stock"}  
+                        <Button
+                            variant="contained"
+                            onClick={handleAddItemToCart}
+                            disabled={!item.isAvailable}  
+                        >
+                            {item.isAvailable ? "Add To Cart" : "Out of Stock"}  
                         </Button>
                     </div>
                 </form>
@@ -86,11 +84,18 @@ const MenuItemCard = React.memo(({ item }) => {
 
 MenuItemCard.propTypes = {
     item: PropTypes.shape({
+        id: PropTypes.number.isRequired, 
         name: PropTypes.string.isRequired,
         price: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         images: PropTypes.arrayOf(PropTypes.string).isRequired,
-        ingredients: PropTypes.arrayOf(PropTypes.string).isRequired, 
+        ingredients: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            category: PropTypes.shape({
+                name: PropTypes.string.isRequired
+            })
+        })).isRequired,
+        isAvailable: PropTypes.bool,  
     }).isRequired,
 };
 
