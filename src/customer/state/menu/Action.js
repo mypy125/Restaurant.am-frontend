@@ -34,35 +34,6 @@ export const createMenuItem = ({ menu, jwt }) => async (dispatch) => {
     }
 };
 
-// export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
-//     dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_REQUEST });
-
-
-//     console.log("Request Data:", reqData);
-
-//     if (!reqData || !reqData.restaurantId) {
-//         console.error("Restaurant ID is undefined");
-//         dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_FAILURE, payload: "Restaurant ID is required." });
-//         return;
-//     }
-
-//     try {
-//         const { data } = await api.get(
-//             `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
-//             { headers: { Authorization: `Bearer ${reqData.jwt}` } }
-//         );
-
-//         if (data) {
-//             dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_SUCCESS, payload: data });
-//         } else {
-//             dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_FAILURE, payload: "No menu items found." });
-//         }
-//     } catch (error) {
-//         const errorMessage = handleError(error);
-//         dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_FAILURE, payload: errorMessage });
-//     }
-// };
-
 export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
     dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_REQUEST });
 

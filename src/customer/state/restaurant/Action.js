@@ -40,29 +40,6 @@ export const getAllResaurantsAction = (token) => async (dispatch) => {
   }
 };
 
-// export const getRestaurantById = (reqData) => async (dispatch) => {
-//   dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
-//   console.log(`Fetching restaurant with ID: ${reqData.restaurantId}`);
-  
-//   if (!reqData || !reqData.restaurantId) {
-//       console.error("Restaurant ID is required");
-//       dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: "Restaurant ID is required." });
-//       return;
-//   }
-
-//   try {
-//       const { data } = await api.get(`/api/restaurants/${reqData.restaurantId}`, {
-//           headers: { Authorization: `Bearer ${reqData.jwt}` },
-//       });
-//       console.log('Fetched data:', data);
-//       dispatch({ type: GET_RESTAURANT_BY_ID_SUCCESS, payload: data });
-//   } catch (error) {
-//       console.error('Error fetching restaurant:', error);
-//       dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: handleError(error) });
-//   }
-// };
-
-
 export const getRestaurantById = (reqData) => async (dispatch) => {
   dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
 
