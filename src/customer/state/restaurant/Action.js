@@ -6,12 +6,13 @@ import {
   DELETE_RESTAURANT_FAILURE, DELETE_RESTAURANT_REQUEST, DELETE_RESTAURANT_SUCCESS,
   GET_ALL_EVENTS_FAILURE, GET_ALL_EVENTS_REQUEST, GET_ALL_EVENTS_SUCCESS,
   GET_ALL_RESTAURANT_FAILURE, GET_ALL_RESTAURANT_REQUEST, GET_ALL_RESTAURANT_SUCCESS,
-  GET_RESTAIRANTS_CATEGORY_FAILURE, GET_RESTAIRANTS_CATEGORY_REQUEST, GET_RESTAIRANTS_CATEGORY_SUCCESS,
+  GET_RESTAIRANTS_CATEGORY_FAILURE, GET_RESTAIRANTS_CATEGORY_REQUEST, 
   GET_RESTAIRANTS_EVENTS_FAILURE, GET_RESTAIRANTS_EVENTS_REQUEST, GET_RESTAIRANTS_EVENTS_SUCCESS,
   GET_RESTAURANT_BY_ID_FAILURE, GET_RESTAURANT_BY_ID_REQUEST, GET_RESTAURANT_BY_ID_SUCCESS,
   GET_RESTAURANT_BY_USER_ID_FAILURE, GET_RESTAURANT_BY_USER_ID_REQUEST, GET_RESTAURANT_BY_USER_ID_SUCCESS,
   UPDATE_RESTAURANT_FAILURE, UPDATE_RESTAURANT_REQUEST, UPDATE_RESTAURANT_SUCCESS,
-  UPDATE_RESTAURANT_STATUS_FAILURE, UPDATE_RESTAURANT_STATUS_REQUEST, UPDATE_RESTAURANT_STATUS_SUCCESS
+  UPDATE_RESTAURANT_STATUS_FAILURE, UPDATE_RESTAURANT_STATUS_REQUEST, UPDATE_RESTAURANT_STATUS_SUCCESS,
+  GET_RESTAIRANTS_CATEGORY_SUCCESS
 } from "./ActionType";
 
 const handleError = (error) => {
@@ -217,21 +218,23 @@ export const createCategoryAction = (reqData, jwt) => async (dispatch) => {
   }
 };
 
-export const getRestaurantsCategory = (jwt, reqData) => async (dispatch) => {
+export const getRestaurantsCategory = (jwt, { restaurantId }) => async (dispatch) => {
   dispatch({ type: GET_RESTAIRANTS_CATEGORY_REQUEST });
 
-  if (!reqData || !reqData.restaurantId) {
+  if (!restaurantId) {
     console.error("Restaurant ID is required");
     dispatch({ type: GET_RESTAIRANTS_CATEGORY_FAILURE, payload: "Restaurant ID is required." });
     return;
   }
 
   try {
-    const { data } = await api.get(`/api/category/restaurant/${reqData.restaurantId}`, {
+    const { data } = await api.get(`/api/category/restaurant/${restaurantId}`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
-    dispatch({ type: GET_RESTAURANTS_CATEGORY_SUCCESS, payload: data });
+    console.log("Categories Data:", data);
+
+    dispatch({ type: GET_RESTAIRANTS_CATEGORY_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: GET_RESTAURANTS_CATEGORY_FAILURE, payload: handleError(error) });
+    dispatch({ type: GET_RESTAIRANTS_CATEGORY_FAILURE, payload: handleError(error) });
   }
 };

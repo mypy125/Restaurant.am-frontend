@@ -19,8 +19,7 @@ import {
   import { getMenuItemsByRestaurantId } from "../../state/menu/Action";
   import { useDebounce } from 'use-debounce';
   
-  const foodTypeOptions = ["Vegetarian Only", "Non-Vegetarian Only", "Both"];
-  
+  const foodTypeOptions = ["all", "vegetarian", "non_vegetarian", "seasonal"];
   const Restaurant = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedFoodType, setSelectedFoodType] = useState(foodTypeOptions[0]);
@@ -44,13 +43,13 @@ import {
         try {
           if (id && jwt) {
             await dispatch(getRestaurantById({ jwt, restaurantId: id }));
-            await dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
+            await dispatch(getRestaurantsCategory(jwt, { restaurantId: id }));
             await dispatch(getMenuItemsByRestaurantId({
               jwt,
               restaurantId: id,
-              vegetarian: debouncedFoodType === "Vegetarian Only",
-              nonveg: debouncedFoodType === "Non-Vegetarian Only",
-              seasonal: true,
+              vegetarian: debouncedFoodType === "vegetarian",
+              nonveg: debouncedFoodType === "non_vegetarian",
+              seasonal: debouncedFoodType === "seasonal",
               foodCategory: debouncedCategory || "",
             }));
           } else {
