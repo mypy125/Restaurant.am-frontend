@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import Accordion from "@mui/material/Accordion";
@@ -7,16 +7,36 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FormControlLabel, FormGroup, Typography } from "@mui/material";
 import CheckBox from "@mui/material/Checkbox";
+import { useDispatch } from "react-redux";
+import { addItemsToCart } from "../../state/cart/Action";
 import categorizeIngredients from "../../components/util/categorizeingredints";
 
 const MenuItemCard = React.memo(({ item }) => {
-      
-    const handleCheckBoxChange = useCallback((ingredient) => {
-        console.log(ingredient);
-    }, []);
+    const [selectedIngredients, setSelectedIngredients] = useState([]);
+    const dispatch = useDispatch();
 
-    const handleAddItemToCart = () => {
-        console.log(`Added ${item.name} to the cart!`);
+    const handleCheckBoxChange = (ingredientName) => {
+        setSelectedIngredients((prev) => {
+            if (prev.includes(ingredientName)) {
+                return prev.filter((item) => item !== ingredientName);
+            } else {
+                return [...prev, ingredientName];
+            }
+        });
+    };
+
+    const handleAddItemToCart = (e) => {
+        e.preventDefault();
+        const reqData = {
+            token: localStorage.getItem("jwt"),
+            cartItem: {
+                foodId: item.id,
+                quantity: 1,
+                ingredients: selectedIngredients,
+            },
+        };
+        dispatch(addItemsToCart(reqData));
+        console.log("req Data ", reqData);
     };
 
     return (
@@ -42,7 +62,7 @@ const MenuItemCard = React.memo(({ item }) => {
                 </div>
             </AccordionSummary>
             <AccordionDetails>
-                <form>
+                <form onSubmit={handleAddItemToCart}>
                     <div className="flex gap-5 flex-wrap">
                         {Object.entries(categorizeIngredients(item.ingredients)).map(([category, ingredients]) => (
                             <div key={category}> 
@@ -51,10 +71,10 @@ const MenuItemCard = React.memo(({ item }) => {
                                     {ingredients.length > 0 ? (
                                         ingredients.map((ingredient) => (
                                             <FormControlLabel 
-                                                key={ingredient.name} 
+                                                key={ingredient.id || ingredient.name} 
                                                 control={
                                                     <CheckBox 
-                                                        onChange={() => handleCheckBoxChange(ingredient)} 
+                                                        onChange={() => handleCheckBoxChange(ingredient.name)} 
                                                     />
                                                 } 
                                                 label={ingredient.name} 
@@ -95,7 +115,7 @@ MenuItemCard.propTypes = {
                 name: PropTypes.string.isRequired
             })
         })).isRequired,
-        isAvailable: PropTypes.bool,  
+        isAvailable: PropTypes.bool.isRequired,  
     }).isRequired,
 };
 

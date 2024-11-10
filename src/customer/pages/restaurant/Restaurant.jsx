@@ -19,7 +19,7 @@ import {
   import { getMenuItemsByRestaurantId } from "../../state/menu/Action";
   import { useDebounce } from 'use-debounce';
   
-  const foodTypeOptions = ["all", "vegetarian", "non_vegetarian", "seasonal"];
+  const foodTypeOptions = ["vegetarian", "non_vegetarian", "seasonal"];
   const Restaurant = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedFoodType, setSelectedFoodType] = useState(foodTypeOptions[0]);
@@ -42,6 +42,7 @@ import {
         
         try {
           if (id && jwt) {
+            console.log("Fetching data for restaurant:", id);
             await dispatch(getRestaurantById({ jwt, restaurantId: id }));
             await dispatch(getRestaurantsCategory(jwt, { restaurantId: id }));
             await dispatch(getMenuItemsByRestaurantId({
@@ -52,19 +53,20 @@ import {
               seasonal: debouncedFoodType === "seasonal",
               foodCategory: debouncedCategory || "",
             }));
+            console.log("Fetched menu items:", menu.menuItems);
           } else {
             setError("Invalid restaurant ID or JWT.");
           }
         } catch (err) {
-          console.error(err);
+          console.error("Error fetching data:", err);
           setError("Error fetching data. Please try again.");
         } finally {
           setLoading(false);
         }
       };
-  
+    
       fetchData();
-    }, [id, jwt, dispatch, debouncedCategory, debouncedFoodType]);
+    }, [id, jwt, dispatch, debouncedCategory, debouncedFoodType]);    
   
     if (loading) {
       return (

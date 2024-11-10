@@ -50,7 +50,7 @@ export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
             `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
             { headers: { Authorization: `Bearer ${reqData.jwt}` } }
         );
-
+        
         console.log("API Response Data:", data); 
 
         if (data && data.menuItems) {

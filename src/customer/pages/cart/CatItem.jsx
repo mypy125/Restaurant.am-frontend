@@ -2,8 +2,28 @@ import { IconButton } from "@mui/material";
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeCartItem, updateCartItem } from "../../state/cart/Action";
 
-const CatItem = () => {
+
+const CatItem = ({item}) => {
+    const {auth, cart} = useSelector(store=> store);
+    const navigate =useNavigate();
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
+    const handleUpdateCartItem=(value)=> {
+        if(value===-1 && item.quantity===1){
+            handleRemoveCartItem()
+        }
+        const data = {cartItemId:item.id, quantity:item.quantity+value}
+        dispatch(updateCartItem({data,jwt}))
+    }
+
+    const handleRemoveCartItem=()=>{
+        dispatch(removeCartItem({cartItemId:item.id, jwt:auth.jwt || jwt}))
+    }
     return(
         <>
             <div className="px-5">
@@ -11,23 +31,23 @@ const CatItem = () => {
                 <div className="lg:flex items-center lg:spce-x-5">
         
                     <div className="w-[5rem] h-[5rem] object-cover">
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8YnVyZ2VyfGVufDB8fDB8fHww"
+                        <img src={item.food.images[0]}
                          alt="" />
                     </div>
         
                     <div className="flex items-center justify-between lg:w-[70%]">
                         <div className="space-y-1 lg:space-y-3 w-full">
-        
-                            <p>Burger</p>
+                            <p>{item.food.name}</p>
+
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center space-x-1">
-                                    <IconButton color="primary">
+                                    <IconButton onClick={()=>handleUpdateCartItem(-1)} color="primary">
                                         <RemoveCircleOutlineIcon/>
                                     </IconButton>
                                     <div className="w-5 h-5 text-xs">
-                                        5
+                                        {item.quantity}
                                     </div>
-                                    <IconButton color="primary">
+                                    <IconButton onClick={()=>handleUpdateCartItem(1)} color="primary">
                                         <AddCircleOutlineIcon/>
                                     </IconButton>
         
@@ -36,12 +56,12 @@ const CatItem = () => {
                             </div>
         
                         </div>
-                        <p>800amd</p>
-        
+                        <p>{item.totalPrice}</p>
                     </div>
-        
                 </div>
-        
+                <div className="pt-3 space-x-2">
+                    {item.ingredients.map((ingredient)=><Chip label={ingredient}/>)}
+                </div>
             </div>
         </>
     )

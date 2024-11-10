@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PersonIcon from "@mui/icons-material/Person";
-import { Avatar, Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
+import { Avatar, Badge, Box, IconButton, Menu, MenuItem, Typography } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import "./Navbar.css";
 
@@ -13,7 +13,7 @@ const Navbar = () => {
     const openMenu = Boolean(anchorEl);
     const navigate = useNavigate();
     
-    const { auth } = useSelector((store) => store) || {}; 
+    const { auth, cart } = useSelector((store) => store) || {}; 
     const user = auth?.user || {}; 
 
     const handleOpenMenu = (event) => setAnchorEl(event.currentTarget);
@@ -27,6 +27,8 @@ const Navbar = () => {
         console.log("handle log out");
         navigate("/login");
     };
+
+    const cartItemsCount = cart?.cart?.items?.length || 0;
 
     return (
         <Box
@@ -90,8 +92,10 @@ const Navbar = () => {
                     <MenuItem onClick={() => { handleCloseMenu(); handleLogOut(); }}>Logout</MenuItem>
                 </Menu>
 
-                <IconButton aria-label="Cart" onClick={() => navigate("/cart")}>
-                    <ShoppingCartIcon sx={{ fontSize: "1.5rem" }} />
+                <IconButton onClick={()=> navigate("/cart")}>
+                    <Badge color="primary" badgeContent={cartItemsCount}>
+                        <ShoppingCartIcon sx={{ fontSize: "1.5rem" }} />
+                    </Badge>
                 </IconButton>
             </div>
         </Box>

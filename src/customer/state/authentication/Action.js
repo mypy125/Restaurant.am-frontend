@@ -31,7 +31,7 @@ export const registerUser = (reqData) => async (dispatch) => {
             localStorage.setItem("jwt", data.jwt);
         }
 
-        reqData.navigate(data.role === "OWNER" || data.role === "ADMIN" ? "/admin/restaurant" : "/");
+        reqData.navigate(data.role === "OWNER" || data.role === "ADMIN" ? "/admin/restaurants" : "/");
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
         console.log("Register success", data);
     } catch (error) {
@@ -49,7 +49,7 @@ export const loginUser = (reqData) => async (dispatch) => {
             localStorage.setItem("jwt", data.jwt);
         }
 
-        reqData.navigate(data.role === "OWNER" || data.role === "ADMIN" ? "/admin/restaurant" : "/");
+        reqData.navigate(data.role === "OWNER" || data.role === "ADMIN" ? "/admin/restaurants" : "/");
         dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
         console.log("Login success", data);
     } catch (error) {

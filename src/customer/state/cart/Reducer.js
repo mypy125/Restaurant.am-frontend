@@ -12,14 +12,14 @@ const initialState={
 const cartReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.FIND_CART_REQUEST:
-            case actionTypes.GET_ALL_CART_ITEMS_REQUEST:
-                case actionTypes.UPDATE_CARTITEM_REQUEST:
-                    case actionTypes.REMOVE_CARTITEM_REQUEST:
-                        return{...state, loading: true, error: null};
+        case actionTypes.GET_ALL_CART_ITEMS_REQUEST:
+        case actionTypes.UPDATE_CARTITEM_REQUEST:
+        case actionTypes.REMOVE_CARTITEM_REQUEST:
+            return{...state, loading: true, error: null};
 
         case actionTypes.FIND_CART_SUCCESS:
-            case actionTypes.CLEARE_CART_SUCCESS:
-                return{...state, loading: false, cart:action.payload, cartItems:action.payload.items};
+        case actionTypes.CLEARE_CART_SUCCESS:
+            return{...state, loading: false, cart:action.payload, cartItems:action.payload.items};
 
         case actionTypes.ADD_ITEMS_TO_CART_SUCCESS:
             return{...state, loading: false, cartItems: [action.payload, ...state.cartItems],};
@@ -33,10 +33,10 @@ const cartReducer = (state = initialState, action) => {
                 item.id !== action.payload),};
 
         case actionTypes.FIND_CART_FAILURE:
-            case actionTypes.UPDATE_CARTITEM_FAILURE:
-                case actionTypes.REMOVE_CARTITEM_FAILURE:
-                    // case actionTypes.GET_ALL_CART_ITEMS_FAILURE:
-                    return{...state, loading: false, error: action.payload};
+        case actionTypes.UPDATE_CARTITEM_FAILURE:
+        case actionTypes.REMOVE_CARTITEM_FAILURE:
+        // case actionTypes.GET_ALL_CART_ITEMS_FAILURE:
+            return{...state, loading: false, error: action.payload};
 
 
         case LOGOUT:
