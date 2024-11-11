@@ -12,42 +12,35 @@ import {
   Paper,
 } from "@mui/material";
 
-const orders = [1,1,1,1,1];
+const ingredientCategory = [1,1,1,1,1];
 
-export const OrderTable = () => {
+export const IngredientCategoryTable = () => {
   return (
     <Box>
       <Card>
-        <CardHeader title={"All Orders"} sx={{ pt: 2, textAlign: "center" }} />
+        <CardHeader title={"Ingredient Category"} 
+        sx={{ pt: 2, textAlign: "center" }} />
         <TableContainer component={Paper}>
-          <Table>
+          <Table aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>id</TableCell>
-                <TableCell align="right">image</TableCell>
-                <TableCell align="right">Customer</TableCell>
-                <TableCell align="right">Price</TableCell>
                 <TableCell align="right">name</TableCell>
-                <TableCell align="right">ingredients</TableCell>
-                <TableCell align="right">status</TableCell>
+               
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.length > 0 ? (
-                orders.map((row) => (
+              {ingredientCategory.length > 0 ? (
+                ingredientCategory.map((row) => (
                   <TableRow
-                    key={row.id}
+                    key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
                       {1}
                     </TableCell>
-                    <TableCell align="right">{"image"}</TableCell>
-                    <TableCell align="right">{"gor1990@gmail.com"}</TableCell>
-                    <TableCell align="right">{"price"}</TableCell>
                     <TableCell align="right">{"name"}</TableCell>
-                    <TableCell align="right">{"ingredients"}</TableCell>
-                    <TableCell align="right">{"status"}</TableCell>
+                   
                   </TableRow>
                 ))
               ) : (
