@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import AddPhotoAlternate from '@mui/icons-material/AddPhotoAlternate';
 import CloseIcon from '@mui/icons-material/Close';
+import { uploadImageToCloudinary } from "../util/uploadToCloudinary";
 
 const initialValues = {
     name: "",
@@ -51,11 +52,18 @@ const CreateRestaurantForm = () => {
     });
 
     const handleRemoveImage = (index) => {
-        console.log("handleRemoveImage")
+        const updatedImages = [...formik.values.images];
+        updatedImages.splice(index,1);
+        formik.setFieldValue("images", updatedImages);
     }
 
-    const handleImageChange = () => {
-        console.log("handleImageChange")
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        setUploadImage(true);
+        const image = await uploadImageToCloudinary(file);
+        console.log("image --- ",image);
+        formik.setFieldValue("images",[...formik.values.images,image]);
+        setUploadImage(false);
     }
 
     return (
