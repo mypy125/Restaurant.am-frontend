@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";  // <-- Import Routes and Route here
+import { Routes, Route } from "react-router-dom"; 
 import { AdminSideBar } from "./AdminSideBar";
 import { Orders } from "../order/Orders";
 import { Menu } from "../menu/Menu";
@@ -8,6 +8,7 @@ import { Ingredients } from "../ingredients/Ingredients";
 import { Events } from "../events/Events";
 import { RestaurantDetails } from "./RestaurantDetails";
 import { RestaurantDashboard } from "../dashboard/RestaurantDashboard";
+import CreateMenuForm from "../menu/CreateMenuForm";
 
 export const Admin = () => {
     const handleClose = () => {
@@ -29,6 +30,7 @@ export const Admin = () => {
                         <Route path="/ingredients" element={<Ingredients />} />
                         <Route path="/event" element={<Events />} />
                         <Route path="/details" element={<RestaurantDetails />} />
+                        <Route path="/add-menu" element={<CreateMenuForm />} />
                     </Routes>
                 </div>
             </div>
