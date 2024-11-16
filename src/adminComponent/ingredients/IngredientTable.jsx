@@ -1,34 +1,40 @@
 import React from "react";
 import {
-  Box,
-  Card,
-  CardHeader,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  CardActions,
-  IconButton,
+  Modal, Box, Card, CardHeader, Table,TableBody, TableCell, TableContainer,
+  TableHead, TableRow,Paper,IconButton,
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
-import { Delete } from "@mui/icons-material";
+import CreateIngredientForm from "./CreateIngredientForm";
 
 const menu = [1,1,1,1,1];
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 export const IngredientTable = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <Box>
       <Card>
         <CardHeader
           action={
-            <IconButton aria-label="settings">
+            <IconButton onClick={handleOpen} aria-label="settings">
               <CreateIcon />
             </IconButton>
           }
-          title={"Menu"}
+          title={"Ingredients"}
           sx={{ pt: 2, textAlign: "center" }}
         />
         
@@ -66,6 +72,16 @@ export const IngredientTable = () => {
           </Table>
         </TableContainer>
       </Card>
+      <Modal 
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+              <CreateIngredientForm/>
+        </Box>
+      </Modal>
     </Box>
   );
 };

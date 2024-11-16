@@ -24,6 +24,7 @@ const CreateMenuForm = () => {
     const formik = useFormik({
         initialValues,
         onSubmit: (values) => {
+            // values.restaurantId = 2
             const data = {
                 name: values.name,
                 description: values.description,
@@ -138,7 +139,7 @@ const CreateMenuForm = () => {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={formik.values.category}
-                                label="Age"
+                                label="category"
                                 onChange={formik.handleChange}
                                 name="category"
                               >
