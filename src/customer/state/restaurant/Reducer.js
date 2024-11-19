@@ -1,9 +1,8 @@
 import * as actionTypes from "./ActionType";
 
 const initialState = {
-    restaurants: [],
-    userRestaurant: null,
-    restaurant: null,
+    restaurants: [], 
+    userRestaurant: null, 
     loading: false,
     error: null,
     events: [],
@@ -23,7 +22,14 @@ const restaurantReducer = (state = initialState, action) => {
             return { ...state, loading: true, error: null };
 
         case actionTypes.CREATE_RESTAURANT_SUCCESS:
-            return { ...state, loading: false, userRestaurant: action.payload };
+            return { 
+                ...state, 
+                loading: false, 
+                userRestaurant: action.payload, 
+                restaurants: state.restaurants.some(item => item.id === action.payload.id) 
+                    ? state.restaurants 
+                    : [...state.restaurants, action.payload],
+            };
 
         case actionTypes.GET_ALL_RESTAURANT_SUCCESS:
             return { ...state, loading: false, restaurants: action.payload };

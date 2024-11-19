@@ -12,13 +12,22 @@ import {
   GET_RESTAURANT_BY_USER_ID_FAILURE, GET_RESTAURANT_BY_USER_ID_REQUEST, GET_RESTAURANT_BY_USER_ID_SUCCESS,
   UPDATE_RESTAURANT_FAILURE, UPDATE_RESTAURANT_REQUEST, UPDATE_RESTAURANT_SUCCESS,
   UPDATE_RESTAURANT_STATUS_FAILURE, UPDATE_RESTAURANT_STATUS_REQUEST, UPDATE_RESTAURANT_STATUS_SUCCESS,
-  GET_RESTAIRANTS_CATEGORY_SUCCESS
+  GET_RESTAIRANTS_CATEGORY_SUCCESS,
+  CREATE_RESTAURANT_SUCCESS,
+  CREATE_RESTAURANT_FAILURE
 } from "./ActionType";
 
 const handleError = (error) => {
   console.error("API Error:", error);
-  return error.response?.data?.message || "Something went wrong. Please try again.";
+  if (error.response) {
+    return error.response.data?.message || 'An error occurred while processing the request.';
+  } else if (error.request) {
+    return 'No response received from the server.';
+  } else {
+    return error.message || 'Unknown error occurred.';
+  }
 };
+
 
 export const getAllResaurantsAction = (token) => async (dispatch) => {
   if (!token) {
@@ -103,22 +112,21 @@ export const getResaurantByUserId = (jwt) => async (dispatch) => {
 
 export const createRestaurant = (reqData) => async (dispatch) => {
   dispatch({ type: CREATE_RESTAURANT_REQUEST });
-  
+
   try {
     const { data } = await api.post("/api/admin/restaurants", reqData.data, {
       headers: { Authorization: `Bearer ${reqData.token}` },
     });
-    
+
     if (data && data.restaurant) {
-      dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: data.restaurant });
+      dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: data.restaurant });
     } else {
-      dispatch({ type: GET_RESTAURANT_BY_USER_ID_FAILURE, payload: 'Unexpected response format' });
+      dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: 'Unexpected response format' });
     }
-    
+
   } catch (error) {
-    dispatch({ type: GET_RESTAURANT_BY_USER_ID_FAILURE, payload: handleError(error) });
-    
-    console.error('Error creating restaurant:', errorMessage);
+    console.error("Error creating restaurant:", error.response?.data || error.message);
+    dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: handleError(error) });
   }
 };
 
@@ -146,10 +154,10 @@ export const deleteResaurant = (restaurantId, jwt) => async (dispatch) => {
   }
 };
 
-export const updateResaurantStatus = (restaurantId, jwt) => async (dispatch) => {
+export const updateResaurantStatus = (jwt,restaurantId) => async (dispatch) => {
   dispatch({ type: UPDATE_RESTAURANT_STATUS_REQUEST });
   try {
-    await api.put(`/api/admin/restaurant/${restaurantId}/status`, {}, {
+    await api.put(`/api/admin/restaurant/${restaurantId}/status`, {
       headers: { Authorization: `Bearer ${jwt}` },
     });
     dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: restaurantId });

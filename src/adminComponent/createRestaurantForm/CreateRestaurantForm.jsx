@@ -4,6 +4,9 @@ import React, { useState } from "react";
 import AddPhotoAlternate from '@mui/icons-material/AddPhotoAlternate';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadImageToCloudinary } from "../util/uploadToCloudinary";
+import { useDispatch } from "react-redux";
+import { createRestaurant } from "../../customer/state/restaurant/Action";
+import * as Yup from "yup";
 
 const initialValues = {
     name: "",
@@ -22,10 +25,30 @@ const initialValues = {
     images: []
 }
 
+const validationSchema = Yup.object({
+    name: Yup.string().required("Restaurant name is required"),
+    description: Yup.string().required("Description is required"),
+    cuisineType: Yup.string().required("Cuisine type is required"),
+    streetAddress: Yup.string().required("Street address is required"),
+    city: Yup.string().required("City is required"),
+    stateProvince: Yup.string().required("State/Province is required"),
+    postalCode: Yup.string().required("Postal code is required"),
+    country: Yup.string().required("Country is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
+    mobile: Yup.string().required("Mobile number is required"),
+    twitter: Yup.string(),
+    instagram: Yup.string(),
+    openingHours: Yup.string().required("Opening hours are required"),
+    images: Yup.array().min(1, "At least one image is required").required("Images are required")
+});
+
 const CreateRestaurantForm = () => {
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt")
     const [uploadImage, setUploadImage] = useState(false);
     const formik = useFormik({
         initialValues,
+        validationSchema,
         onSubmit: (values) => {
             const data = {
                 name: values.name,
@@ -48,6 +71,7 @@ const CreateRestaurantForm = () => {
                 images: values.images
             };
             console.log("restaurant creation data", data);
+            dispatch(createRestaurant({data, token:jwt}))
         },
     });
 
@@ -122,6 +146,8 @@ const CreateRestaurantForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.name}
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -133,6 +159,8 @@ const CreateRestaurantForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.description}
+                                error={formik.touched.description && Boolean(formik.errors.description)}
+                                helperText={formik.touched.description && formik.errors.description}
                             />
                         </Grid>
                         <Grid item xs={12} lg={6}>
@@ -144,6 +172,8 @@ const CreateRestaurantForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.cuisineType}
+                                error={formik.touched.cuisineType && Boolean(formik.errors.cuisineType)}
+                                helperText={formik.touched.cuisineType && formik.errors.cuisineType}
                             />
                         </Grid>
                         <Grid item xs={12} lg={6}>
@@ -155,6 +185,8 @@ const CreateRestaurantForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.openingHours}
+                                error={formik.touched.openingHours && Boolean(formik.errors.openingHours)}
+                                helperText={formik.touched.openingHours && formik.errors.openingHours}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -166,6 +198,8 @@ const CreateRestaurantForm = () => {
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
                                 value={formik.values.streetAddress}
+                                error={formik.touched.streetAddress && Boolean(formik.errors.streetAddress)}
+                                helperText={formik.touched.streetAddress && formik.errors.streetAddress}
                             />
 
                     </Grid>
@@ -178,6 +212,8 @@ const CreateRestaurantForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.city}
+                            error={formik.touched.city && Boolean(formik.errors.city)}
+                            helperText={formik.touched.city && formik.errors.city}
                         />
 
                     </Grid>
@@ -190,6 +226,8 @@ const CreateRestaurantForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.stateProvince}
+                            error={formik.touched.stateProvince && Boolean(formik.errors.stateProvince)}
+                            helperText={formik.touched.stateProvince && formik.errors.stateProvince}
                         />
 
                     </Grid>
@@ -202,6 +240,8 @@ const CreateRestaurantForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.postalCode}
+                            error={formik.touched.postalCode && Boolean(formik.errors.postalCode)}
+                            helperText={formik.touched.postalCode && formik.errors.postalCode}
                         />
 
                     </Grid>
@@ -214,6 +254,8 @@ const CreateRestaurantForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.country}
+                            error={formik.touched.country && Boolean(formik.errors.country)}
+                            helperText={formik.touched.country && formik.errors.country}
                         />
 
                     </Grid>
@@ -226,6 +268,8 @@ const CreateRestaurantForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.email}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                            helperText={formik.touched.email && formik.errors.email}
                         />
 
                     </Grid>
@@ -238,6 +282,8 @@ const CreateRestaurantForm = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.mobile}
+                            error={formik.touched.mobile && Boolean(formik.errors.mobile)}
+                            helperText={formik.touched.mobile && formik.errors.mobile}
                         />
 
                     </Grid>

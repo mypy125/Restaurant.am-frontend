@@ -4,29 +4,42 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import { useDispatch, useSelector } from "react-redux";
+import { updateResaurantStatus } from '../../customer/state/restaurant/Action';
 
 export const RestaurantDetails = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const {restaurant} = useSelector((store)=> store);
+    const dispatch = useDispatch();
+
+    console.log("restaurant details",restaurant)
 
     const handleRestaurantStatus = () => {
-        setIsOpen(!isOpen); 
+        dispatch(updateResaurantStatus({
+            restaurantId: restaurant.userRestaurant.id,
+            jwt: localStorage.getItem("jwt")
+        }))
     }
+
+    if (!restaurant || !restaurant.userRestaurant) {
+        return <div>Loading...</div>; 
+    }
+
 
     return (
         <div className="lg:px-20 px-5 pb-10">
             <div className="py-5 flex justify-center items-center gap-5">
                 <h1 className="text-2xl lg:text-7xl text-center font-bold p-5">
-                    Armenian Cuisine
+                    {restaurant.userRestaurant?.name}
                 </h1>
                 <div>
                     <Button
-                        color={isOpen ? "primary" : "error"}
+                        color={!restaurant.userRestaurant?.open ? "primary" : "error"}
                         className="py-[1rem] px-[2rem]"
                         variant="contained"
                         onClick={handleRestaurantStatus}
                         size="large"
                     >
-                        {isOpen ? "Close" : "Open"}
+                        {restaurant.userRestaurant?.open ? "Close" : "Open"}
                     </Button>
                 </div>
             </div>
@@ -40,35 +53,35 @@ export const RestaurantDetails = () => {
                                     <p className="w-48">Owner</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        Gor Mkhitaryan
+                                        {restaurant.userRestaurant?.owner.fullName}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Restaurant Name</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        Gor Mkhitaryan
+                                        {restaurant.userRestaurant?.name}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Cuisine Type</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        Gor Mkhitaryan
+                                        {restaurant.userRestaurant?.cuisineType}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Opening Hours</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        Gor Mkhitaryan
+                                        {restaurant.userRestaurant?.openingHours}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Status</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        {isOpen ? (
+                                        {restaurant.userRestaurant?.open? (
                                             <span className="px-5 py-2 rounded-full bg-green-400 text-gray-950">Open</span>
                                         ) : (
                                             <span className="px-5 py-2 rounded-full bg-red-400 text-gray-950">Closed</span>
@@ -125,24 +138,24 @@ export const RestaurantDetails = () => {
                                     <p className="w-48">Email</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        Gor Mkhitaryan
+                                        {restaurant.userRestaurant?.contactInformation?.email}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Mobile</p>
                                     <p className="text-gray-400">
                                         <span className="pr-55">-</span>
-                                        Gor Mkhitaryan
+                                        {restaurant.userRestaurant?.contactInformation?.mobile}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Social</p>
                                     <div className="flex text-gray-400 items-center pb-3 gap-2">
                                         <span className="pr-5">-</span>
-                                        <a href="/" aria-label="Instagram">
+                                        <a href={restaurant.userRestaurant?.contactInformation?.instagram} aria-label="Instagram">
                                             <InstagramIcon fontSize="large" />
                                         </a>
-                                        <a href="/" aria-label="Twitter">
+                                        <a href={restaurant.userRestaurant?.contactInformation?.twitter} aria-label="Twitter">
                                             <TwitterIcon fontSize="large" />
                                         </a>
                                         <a href="/" aria-label="Facebook">

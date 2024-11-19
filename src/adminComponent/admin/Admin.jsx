@@ -11,6 +11,7 @@ import { RestaurantDashboard } from "../dashboard/RestaurantDashboard";
 import CreateMenuForm from "../menu/CreateMenuForm";
 
 export const Admin = () => {
+    
     const handleClose = () => {
         
     }
