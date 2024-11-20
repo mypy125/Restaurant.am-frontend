@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Modal,
   Box,
@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import CreateFoodCategoryForm from "./CreateFoodCategoryForm";
+import { useDispatch, useSelector } from "react-redux";
+import { getRestaurantsCategory } from "../../customer/state/restaurant/Action";
 
 const foodCategory = [1,1,1,1,1];
 
@@ -32,9 +34,23 @@ const style = {
 };
 
 export const FoodCategoryTable = () => {
+  const {restaurant} = useSelector((store)=> store);
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+
+    console.log("Fetching categories for restaurant ID:", restaurant.userRestaurant?.id);
+    dispatch(getRestaurantsCategory({
+      jwt,
+      restaurantId: restaurant.userRestaurant?.id }));
+ 
+  }, []);
+
 
   return (
     <Box>
@@ -58,21 +74,16 @@ export const FoodCategoryTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {foodCategory.length > 0 ? (
-                foodCategory.map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                     <TableCell component="th" scope="row">{1}</TableCell>
-                    <TableCell align="left">{"name"}</TableCell>
+              {restaurant.categories?.length > 0 ? (
+                restaurant.categories.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{item.id}</TableCell>
+                    <TableCell>{item.name}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">
-                    No menu found
-                  </TableCell>
+                  <TableCell colSpan={2} align="center">No categories found</TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -86,7 +97,7 @@ export const FoodCategoryTable = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-              <CreateFoodCategoryForm/>
+            <CreateFoodCategoryForm/>
         </Box>
       </Modal>
     </Box>

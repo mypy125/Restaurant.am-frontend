@@ -40,6 +40,7 @@ export const fetchRestaurantsOrder = ({restaurantId, orderStatus, jwt}) => {
                      Authorization: `Bearer ${jwt}`,
                 },
             });
+            
             const orders = data;
             console.log("restaurants order-----------", orders);
 

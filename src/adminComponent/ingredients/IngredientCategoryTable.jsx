@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Modal, Box, Card, CardHeader,Table,TableBody,TableCell,TableContainer,
   TableHead,TableRow, Paper, IconButton,
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import CreateIngredientCategoryForm from "./CreateIngredientCategoryForm";
+import { useDispatch, useSelector } from "react-redux";
+import { getIngredientCategory } from "../../customer/state/ingredients/Action";
 
 const ingredientCategory = [1,1,1,1,1];
 
@@ -24,6 +26,13 @@ export const IngredientCategoryTable = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
+  const {restaurant,ingredients} = useSelector((store)=> store)
+  const jwt = localStorage.getItem("jwt");
+
+  useEffect(()=> {
+    dispatch(getIngredientCategory({id:restaurant.userRestaurant?.id,jwt}))
+  },[])
 
   return (
     <Box>
@@ -45,23 +54,22 @@ export const IngredientCategoryTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredientCategory.length > 0 ? (
-                ingredientCategory.map((row) => (
+              {Array.isArray(ingredients.category) && ingredients.category.length > 0 ? (
+                ingredients.category.map((item) => (
                   <TableRow
-                    key={row.name}
+                    key={item.id}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {1}
+                      {item.id}
                     </TableCell>
-                    <TableCell align="right">{"name"}</TableCell>
-                   
+                    <TableCell align="right">{item.name}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={7} align="center">
-                    No orders found
+                  <TableCell colSpan={2} align="center">
+                    No categories found
                   </TableCell>
                 </TableRow>
               )}

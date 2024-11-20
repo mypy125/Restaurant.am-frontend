@@ -154,19 +154,23 @@ export const deleteResaurant = (restaurantId, jwt) => async (dispatch) => {
   }
 };
 
-export const updateResaurantStatus = (jwt,restaurantId) => async (dispatch) => {
+export const updateResaurantStatus = ({restaurantId, jwt}) => async (dispatch) => {
   dispatch({ type: UPDATE_RESTAURANT_STATUS_REQUEST });
   try {
-    await api.put(`/api/admin/restaurant/${restaurantId}/status`, {
-      headers: { Authorization: `Bearer ${jwt}` },
+    const res = await api.put(`/api/admin/restaurants/${restaurantId}/status`, {},{
+      headers: {
+         Authorization: `Bearer ${jwt}`
+         },
     });
-    dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: restaurantId });
+
+    console.log("res--",res.data)
+    dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: handleError(error) });
   }
 };
 
-export const createEventAction = (data, jwt, restaurantId) => async (dispatch) => {
+export const createEventAction = ({data, jwt, restaurantId}) => async (dispatch) => {
   dispatch({ type: CREATE_EVENT_REQUEST });
   try {
     const { data: eventData } = await api.post(`/api/admin/events/restaurant/${restaurantId}`, data, {
@@ -178,7 +182,7 @@ export const createEventAction = (data, jwt, restaurantId) => async (dispatch) =
   }
 };
 
-export const getAllEvents = (jwt) => async (dispatch) => {
+export const getAllEvents = ({jwt}) => async (dispatch) => {
   dispatch({ type: GET_ALL_EVENTS_REQUEST });
   try {
     const { data } = await api.get("/api/events", {
@@ -190,7 +194,7 @@ export const getAllEvents = (jwt) => async (dispatch) => {
   }
 };
 
-export const deleteEventAction = (eventId, jwt) => async (dispatch) => {
+export const deleteEventAction = ({eventId, jwt}) => async (dispatch) => {
   dispatch({ type: DELETE_EVENTS_REQUEST });
   try {
     await api.delete(`/api/admin/events/${eventId}`, {
@@ -202,7 +206,7 @@ export const deleteEventAction = (eventId, jwt) => async (dispatch) => {
   }
 };
 
-export const getRestaurantEvents = (restaurantId, jwt) => async (dispatch) => {
+export const getRestaurantEvents = ({restaurantId, jwt}) => async (dispatch) => {
   dispatch({ type: GET_RESTAIRANTS_EVENTS_REQUEST });
   try {
     const { data } = await api.get(`/api/admin/events/restaurant/${restaurantId}`, {
@@ -214,19 +218,25 @@ export const getRestaurantEvents = (restaurantId, jwt) => async (dispatch) => {
   }
 };
 
-export const createCategoryAction = (reqData, jwt) => async (dispatch) => {
+export const createCategoryAction = ({reqData, jwt}) => async (dispatch) => {
   dispatch({ type: CREATE_CATEGORY_REQUEST });
+
   try {
-    const { data } = await api.post("/api/admin/category", reqData, {
-      headers: { Authorization: `Bearer ${jwt}` },
+    const res = await api.post("/api/admin/category", reqData, {
+      headers: { 
+        Authorization: `Bearer ${jwt}`
+       },
     });
-    dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: data });
+    console.log("create category",res.data);
+
+    dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: res.data });
   } catch (error) {
+    console.log("catch---",error);
     dispatch({ type: CREATE_CATEGORY_FAILURE, payload: handleError(error) });
   }
 };
 
-export const getRestaurantsCategory = (jwt, { restaurantId }) => async (dispatch) => {
+export const getRestaurantsCategory = ({jwt, restaurantId }) => async (dispatch) => {
   dispatch({ type: GET_RESTAIRANTS_CATEGORY_REQUEST });
 
   if (!restaurantId) {
@@ -236,13 +246,22 @@ export const getRestaurantsCategory = (jwt, { restaurantId }) => async (dispatch
   }
 
   try {
-    const { data } = await api.get(`/api/category/restaurant/${restaurantId}`, {
-      headers: { Authorization: `Bearer ${jwt}` },
+    const res = await api.get(`/api/category/restaurant/${restaurantId}`, {
+      headers: { 
+        Authorization: `Bearer ${jwt}`
+       },
     });
-    console.log("Categories Data:", data);
+    console.log("Categories Data from API:", res.data);
 
-    dispatch({ type: GET_RESTAIRANTS_CATEGORY_SUCCESS, payload: data });
+    if (res.data && res.data.length > 0) {
+      dispatch({ type: GET_RESTAIRANTS_CATEGORY_SUCCESS, payload: res.data });
+    } else {
+      console.log("No categories found for restaurantId:", restaurantId);
+      dispatch({ type: GET_RESTAIRANTS_CATEGORY_FAILURE, payload: "No categories found." });
+    }
   } catch (error) {
     dispatch({ type: GET_RESTAIRANTS_CATEGORY_FAILURE, payload: handleError(error) });
   }
 };
+
+

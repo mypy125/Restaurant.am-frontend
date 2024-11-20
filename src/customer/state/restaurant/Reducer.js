@@ -26,9 +26,6 @@ const restaurantReducer = (state = initialState, action) => {
                 ...state, 
                 loading: false, 
                 userRestaurant: action.payload, 
-                restaurants: state.restaurants.some(item => item.id === action.payload.id) 
-                    ? state.restaurants 
-                    : [...state.restaurants, action.payload],
             };
 
         case actionTypes.GET_ALL_RESTAURANT_SUCCESS:
@@ -50,6 +47,9 @@ const restaurantReducer = (state = initialState, action) => {
                 restaurants: state.restaurants.filter(
                     (item) => item.id !== action.payload
                 ),
+                userRestaurant:state.userRestaurant.filter(
+                    (item)=> item.id !== action.payload
+                )
             };
 
         case actionTypes.CREATE_EVENT_SUCCESS:
@@ -63,6 +63,9 @@ const restaurantReducer = (state = initialState, action) => {
 
         case actionTypes.GET_ALL_EVENTS_SUCCESS:
             return { ...state, loading: false, events: action.payload };
+
+        case actionTypes.GET_RESTAIRANTS_EVENTS_SUCCESS:
+            return{...state, loading:false, restaurantsEvents:action.payload}
 
         case actionTypes.DELETE_EVENTS_SUCCESS:
             return {
@@ -82,6 +85,7 @@ const restaurantReducer = (state = initialState, action) => {
             };
 
         case actionTypes.GET_RESTAIRANTS_CATEGORY_SUCCESS:
+            console.log("Categories added to state:", action.payload); 
             return { ...state, loading: false, categories: action.payload };
 
         case actionTypes.CREATE_RESTAURANT_FAILURE:

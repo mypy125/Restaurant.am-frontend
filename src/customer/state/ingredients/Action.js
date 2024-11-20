@@ -1,5 +1,5 @@
 import { api } from "../../config/api";
-import { CREATE_INGREDIENT_CATEGORY_SUCCESS, GET_INGREDIENT_CATEGORY_SUCCESS, 
+import { CREATE_INGREDIENT_CATEGORY_FAILURE, CREATE_INGREDIENT_CATEGORY_SUCCESS, GET_INGREDIENT_CATEGORY_SUCCESS, 
     GET_INGREDIENTS, UPDATE_STOCK } from "./ActionTypes";
 
 export const getIngredientOfRestaurant = ({ id, jwt }) => async (dispatch) => {
@@ -35,6 +35,9 @@ export const createIngredient = ({ data, jwt }) => async (dispatch) => {
 export const createIngredientCategory = ({ data, jwt }) => async (dispatch) => {
     console.log("data", data, "jwt",jwt);
     try {
+        if (!data || !jwt) {
+            throw new Error("Data or JWT is missing");
+        }
         const response = await api.post("/api/admin/ingredients/category", data, {
             headers: {
                 Authorization: `Bearer ${jwt}`
@@ -43,7 +46,7 @@ export const createIngredientCategory = ({ data, jwt }) => async (dispatch) => {
         console.log("create ingredint category", response.data);
         dispatch({ type: CREATE_INGREDIENT_CATEGORY_SUCCESS, payload: response.data });
     } catch (error) {
-        console.log("error", error);
+        console.log("error", error.message);
     }
 };
 
