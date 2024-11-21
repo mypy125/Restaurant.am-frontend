@@ -12,15 +12,14 @@ const CreateIngredientForm = () => {
     const [formData, setFormData]=useState({
         name:"",
         categoryId:"",
-        restaurantId:""
     })
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const data={
-            ...formData.name,
-            categoryId: formData.categoryId,
-            restaurantId:restaurant.userRestaurant.id
+            name:formData.name,
+            categoryId: formData.categoryId || null,
+            restaurantId:restaurant.userRestaurant.id || null
         };
         console.log(data);
         dispatch(createIngredient({data,jwt}))
@@ -60,7 +59,7 @@ const CreateIngredientForm = () => {
                       name="categoryId"
                     >
                      {ingredients.category.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>{item.name}
+                        <MenuItem value={item.id}>{item.name}
                         </MenuItem>
                     ))}
                     </Select>

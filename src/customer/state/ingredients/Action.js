@@ -1,5 +1,5 @@
 import { api } from "../../config/api";
-import { CREATE_INGREDIENT_CATEGORY_FAILURE, CREATE_INGREDIENT_CATEGORY_SUCCESS, GET_INGREDIENT_CATEGORY_SUCCESS, 
+import { CREATE_INGREDIENT_CATEGORY_SUCCESS, CREATE_INGREDIENT_SUCCESS, GET_INGREDIENT_CATEGORY_SUCCESS, 
     GET_INGREDIENTS, UPDATE_STOCK } from "./ActionTypes";
 
 export const getIngredientOfRestaurant = ({ id, jwt }) => async (dispatch) => {
@@ -68,7 +68,7 @@ export const getIngredientCategory = ({ id, jwt }) => async (dispatch) => {
 export const updateStockOfIngredient = ({ id, jwt }) => async (dispatch) => {
 
     try {
-        const { data } = await api.put(`/api/admin/ingredients/${id}/stock`, {}, {
+        const { data } = await api.put(`/api/admin/ingredients/${id}/stoke`, {}, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
