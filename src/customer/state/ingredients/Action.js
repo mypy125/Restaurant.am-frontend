@@ -58,7 +58,9 @@ export const getIngredientCategory = ({ id, jwt }) => async (dispatch) => {
                 Authorization: `Bearer ${jwt}`
             }
         });
-        console.log("get ingredint category", response.data);
+        const data = response.data; 
+        console.log(data);
+        
         dispatch({ type: GET_INGREDIENT_CATEGORY_SUCCESS, payload: data });
     } catch (error) {
         console.log("error", error);

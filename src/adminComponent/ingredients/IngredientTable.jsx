@@ -32,10 +32,10 @@ export const IngredientTable = () => {
   const handleClose = () => setOpen(false);
 
   useEffect(()=> {
-
-    dispatch(getIngredientOfRestaurant({jwt,id:restaurant.userRestaurant.id}))
-
-  },[])
+    if (jwt && restaurant.userRestaurant.id) {
+      dispatch(getIngredientOfRestaurant({jwt,id:restaurant.userRestaurant.id}))
+    }
+  },[jwt, restaurant.userRestaurant.id, dispatch])
 
   const handleUpdateStoke = (id) => {
     dispatch(updateStockOfIngredient({id,jwt}))
@@ -65,10 +65,10 @@ export const IngredientTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredients.ingredients.length > 0 ? (
+              {ingredients?.ingredients?.length > 0 ? (
                 ingredients.ingredients.map((item) => (
                   <TableRow
-                    key={item.name}
+                    key={item.id || item.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">{item.id}</TableCell>
@@ -82,7 +82,7 @@ export const IngredientTable = () => {
               ) : (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
-                    No menu found
+                    No Ingredient found
                   </TableCell>
                 </TableRow>
               )}

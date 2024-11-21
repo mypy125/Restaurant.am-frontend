@@ -20,7 +20,7 @@ const CreateIngredientCategoryForm = () => {
         }
         console.log(data);
         dispatch(createIngredientCategory({data,jwt}))
-    
+        setFormData({ name: "", categoryId: "" });
     };
 
     const handleInputChange = (e) => {

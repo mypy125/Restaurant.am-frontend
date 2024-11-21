@@ -18,8 +18,8 @@ const CreateIngredientForm = () => {
         e.preventDefault();
         const data={
             name:formData.name,
-            categoryId: formData.categoryId || null,
-            restaurantId:restaurant.userRestaurant.id || null
+            categoryId: formData.categoryId,
+            restaurantId:restaurant.userRestaurant.id
         };
         console.log(data);
         dispatch(createIngredient({data,jwt}))

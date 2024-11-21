@@ -31,12 +31,14 @@ export const IngredientCategoryTable = () => {
   const jwt = localStorage.getItem("jwt");
 
   useEffect(()=> {
-    dispatch(getIngredientCategory({id:restaurant.userRestaurant.id,jwt}))
-  },[])
+    if (restaurant.userRestaurant?.id && jwt) {
+      dispatch(getIngredientCategory({id:restaurant.userRestaurant.id,jwt}))
+    }
+  },[restaurant.userRestaurant?.id, jwt, dispatch])
 
   return (
     <Box>
-      <Card className="mt-1">
+      <Card sx={{ mt: 1 }}>
         <CardHeader 
         action={
           <IconButton onClick={handleOpen} aria-label="settings">
@@ -54,10 +56,10 @@ export const IngredientCategoryTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Array.isArray(ingredients.category) && ingredients.category.length > 0 ? (
+              {Array.isArray(ingredients?.category) && ingredients.category.length > 0 ? (
                 ingredients.category.map((item) => (
                   <TableRow
-                    key={item.id}
+                    key={item.id || item.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">

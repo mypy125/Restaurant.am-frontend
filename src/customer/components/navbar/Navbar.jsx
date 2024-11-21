@@ -20,7 +20,7 @@ const Navbar = () => {
     const handleCloseMenu = () => setAnchorEl(null);
 
     const handleAvatarClick = () => {
-        navigate(user.role === "CUSTOMER" ? "/my-profile" : "/admin/restaurant");
+        navigate(user.role === "CUSTOMER" ? "/my-profile" : "/admin/restaurants");
     };
 
     const handleLogOut = () => {
