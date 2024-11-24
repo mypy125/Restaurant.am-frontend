@@ -65,27 +65,29 @@ export const IngredientTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredients?.ingredients?.length > 0 ? (
-                ingredients.ingredients.map((item) => (
-                  <TableRow
-                    key={item.id || item.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">{item.id}</TableCell>
-                    <TableCell align="left">{item.name}</TableCell>
-                    <TableCell align="right">{item.category.name}</TableCell>
-                    <TableCell align="right">
-                      <Button onClick={()=> handleUpdateStoke(item.id)}>{item.inStoke ? "in_stoke" : "out_of_stoke"}</Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} align="center">
-                    No Ingredient found
+            {ingredients?.ingredients?.length > 0 ? (
+              ingredients.ingredients.map((item) => (
+                <TableRow
+                  key={item.id || item.name}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">{item.id}</TableCell>
+                  <TableCell align="left">{item.name}</TableCell>
+                  <TableCell align="right">{item.category ? item.category.name : 'Без категории'}</TableCell>
+                  <TableCell align="right">
+                    <Button onClick={() => handleUpdateStoke(item.id)}>
+                      {item.inStoke ? "in_stoke" : "out_of_stoke"}
+                    </Button>
                   </TableCell>
                 </TableRow>
-              )}
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  No Ingredient found
+                </TableCell>
+              </TableRow>
+            )}              
             </TableBody>
           </Table>
         </TableContainer>

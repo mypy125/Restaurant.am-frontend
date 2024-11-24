@@ -1,3 +1,4 @@
+
 import { api } from "../../config/api";
 import {
     CREATE_MENU_ITEM_FAILURE,
@@ -26,7 +27,9 @@ export const createMenuItem = ({ menu, jwt }) => async (dispatch) => {
 
     try {
         const { data } = await api.post("/api/admin/food", menu, {
-            headers: { Authorization: `Bearer ${jwt}` },
+            headers: { 
+                Authorization: `Bearer ${jwt}`
+            },
         });
         dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: data });
     } catch (error) {

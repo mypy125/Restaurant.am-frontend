@@ -10,15 +10,28 @@ import { updateResaurantStatus } from '../../customer/state/restaurant/Action';
 export const RestaurantDetails = () => {
     const {restaurant} = useSelector((store)=> store);
     const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
 
     console.log("restaurant details",restaurant)
 
     const handleRestaurantStatus = () => {
         dispatch(updateResaurantStatus({
             restaurantId: restaurant.userRestaurant.id,
-            jwt: localStorage.getItem("jwt")
+            jwt
         }))
     }
+
+    // useEffect(()=> {
+    //     dispatch(getMenuItemsByRestaurantId({
+    //     jwt,
+    //     restaurantId: id,
+    //     vegetarian: debouncedFoodType === "vegetarian",
+    //     nonveg: debouncedFoodType === "non_vegetarian",
+    //     seasonal: debouncedFoodType === "seasonal",
+    //     foodCategory: debouncedCategory || "",
+    //   }));
+    // },[])
+   
 
     if (!restaurant || !restaurant.userRestaurant) {
         return <div>Loading...</div>; 
