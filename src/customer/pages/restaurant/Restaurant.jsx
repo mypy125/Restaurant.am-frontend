@@ -43,9 +43,9 @@ import {
         try {
           if (id && jwt) {
             console.log("Fetching data for restaurant:", id);
-            await dispatch(getRestaurantById({ jwt, restaurantId: id }));
-            await dispatch(getRestaurantsCategory(jwt, { restaurantId: id }));
-            await dispatch(getMenuItemsByRestaurantId({
+              dispatch(getRestaurantById({ jwt, restaurantId: id }));
+              dispatch(getRestaurantsCategory({jwt, restaurantId: id }));
+              dispatch(getMenuItemsByRestaurantId({
               jwt,
               restaurantId: id,
               vegetarian: debouncedFoodType === "vegetarian",

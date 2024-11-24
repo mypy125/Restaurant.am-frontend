@@ -73,7 +73,7 @@ export const IngredientTable = () => {
                 >
                   <TableCell component="th" scope="row">{item.id}</TableCell>
                   <TableCell align="left">{item.name}</TableCell>
-                  <TableCell align="right">{item.category ? item.category.name : 'Без категории'}</TableCell>
+                  <TableCell align="right">{item.category ? item.category.name : 'No Categories'}</TableCell>
                   <TableCell align="right">
                     <Button onClick={() => handleUpdateStoke(item.id)}>
                       {item.inStoke ? "in_stoke" : "out_of_stoke"}

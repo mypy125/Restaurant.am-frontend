@@ -60,19 +60,21 @@ export const MenuTable = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">Image</TableCell>
-                <TableCell align="right">Title</TableCell>
-                <TableCell align="right">Ingredients</TableCell>
-                <TableCell align="right">Price</TableCell>
-                <TableCell align="right">Avialabllity</TableCell>
+                <TableCell align="left">image</TableCell>
+                <TableCell align="right">title</TableCell>
+                <TableCell align="right">ingredients</TableCell>
+                <TableCell align="right">price</TableCell>
+                <TableCell align="right">availability</TableCell>
                 <TableCell align="right">Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {menu.menuItems.length > 0 ? (
-                menu.menuItems.map((item) => (
+              {menu?.menuItems?.length > 0 ? (
+                menu?.menuItems?.map((item) => (
                   <TableRow key={item.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                    <TableCell component="th" scope="row"><Avatar src={item.images[0]}></Avatar></TableCell>
+                    <TableCell component="th" scope="row">
+                      <Avatar src={item.images[0]}></Avatar>
+                    </TableCell>
                     <TableCell align="left">{item.name}</TableCell>
                     <TableCell align="right">
                       {item.ingredients.map((ingredient)=><Chip label={ingredient.name}/>)}
