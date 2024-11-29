@@ -76,7 +76,7 @@ export const FoodCategoryTable = () => {
             <TableBody>
               {restaurant.categories?.length > 0 ? (
                 restaurant.categories.map((item) => (
-                  <TableRow key={item.id}>
+                  <TableRow key={item.name}>{/*item.id*/}
                     <TableCell>{item.id}</TableCell>
                     <TableCell>{item.name}</TableCell>
                   </TableRow>

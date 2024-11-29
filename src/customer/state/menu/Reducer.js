@@ -26,6 +26,7 @@ const menuItemsReducer = (state = initialState, action) => {
             };
 
         case actionTypes.GET_MENU_ITEM_BY_RESTAURANT_ID_SUCCESS:
+            console.log("Menu items fetched:", action.payload);
             return { ...state, loading: false, menuItems: action.payload };
 
         case actionTypes.DELETE_MENU_ITEM_SUCCESS:

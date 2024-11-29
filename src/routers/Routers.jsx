@@ -13,17 +13,17 @@ const Routers = () => {
   const jwt = localStorage.getItem("jwt");
 
   useEffect(() => {
-    if (jwt && auth.jwt !== jwt) {
-      dispatch(getUser(jwt)); 
-      dispatch(findCart(jwt)); 
-    }
-  }, [jwt, auth.jwt, dispatch]);
+    
+    dispatch(getUser(auth.jwt || jwt)); 
+    dispatch(findCart(jwt)); 
+    
+  }, [auth.jwt]);
 
   useEffect(() => {
-    if (auth.jwt) {
-      dispatch(getResaurantByUserId(auth.jwt)); 
-    }
-  }, [auth.user, auth.jwt, dispatch]);
+    
+    dispatch(getResaurantByUserId(auth.jwt || jwt)); 
+    
+  }, [auth.user]);
 
   return (
     <Routes>

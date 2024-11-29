@@ -9,18 +9,18 @@ const CreateIngredientCategoryForm = () => {
     const {restaurant} = useSelector(store => store)
     const [formData, setFormData]=useState({
         name:"",
-        categoryId:""
+        
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const data={
-            name:formData.name,
-            restaurantId:restaurant.userRestaurant.id
+            name: formData.name,
+            restaurantId: restaurant.userRestaurant.id
         }
-        console.log(data);
+        console.log("createIngredientCategory data,--->",data);
         dispatch(createIngredientCategory({data,jwt}))
-        setFormData({ name: "", categoryId: "" });
+        setFormData({ name: ""});
     };
 
     const handleInputChange = (e) => {
@@ -45,6 +45,7 @@ const CreateIngredientCategoryForm = () => {
                     onChange={handleInputChange}
                     value={formData.name}
                 />
+             
                 <Button onClick={handleSubmit} variant="contained" type="submit">
                     Create Category
                 </Button>

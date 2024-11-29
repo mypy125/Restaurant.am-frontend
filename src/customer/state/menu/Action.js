@@ -49,12 +49,15 @@ export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
     }
 
     try {
-        const { data } = await api.get(
-            `/api/food/restaurant/${reqData.restaurantId}?vegetarian=${reqData.vegetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
-            { headers: { Authorization: `Bearer ${reqData.jwt}` } }
-        );
         
-        console.log("API Response Data:", data); 
+        const { jwt, restaurantId, vegetarian, nonveg, seasonal, foodCategory } = reqData;
+
+        const { data } = await api.get(
+            `/api/food/restaurant/${restaurantId}?vegetarian=${vegetarian}&nonveg=${nonveg}&seasonal=${seasonal}&food_category=${foodCategory}`,
+            { headers: { Authorization: `Bearer ${jwt}` } }
+        );
+
+        // console.log("API Response Data:", data);
 
         if (data && data.menuItems) {
             dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_SUCCESS, payload: data.menuItems });

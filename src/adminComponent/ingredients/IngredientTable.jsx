@@ -37,10 +37,14 @@ export const IngredientTable = () => {
     }
   },[jwt, restaurant.userRestaurant.id, dispatch])
 
+  useEffect(() => {
+    console.log(ingredients); 
+  }, [ingredients]);
+
   const handleUpdateStoke = (id) => {
     dispatch(updateStockOfIngredient({id,jwt}))
   }
-
+ 
   return (
     <Box>
       <Card>
@@ -65,41 +69,41 @@ export const IngredientTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {ingredients?.ingredients?.length > 0 ? (
-              ingredients.ingredients.map((item) => (
-                <TableRow
-                  key={item.id || item.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">{item.id}</TableCell>
-                  <TableCell align="left">{item.name}</TableCell>
-                  <TableCell align="right">{item.category ? item.category.name : 'No Categories'}</TableCell>
-                  <TableCell align="right">
-                    <Button onClick={() => handleUpdateStoke(item.id)}>
-                      {item.inStoke ? "in_stoke" : "out_of_stoke"}
-                    </Button>
+              {ingredients?.ingredients && ingredients.ingredients.length > 0 ? (
+                ingredients.ingredients.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">{item.id}</TableCell>
+                    <TableCell align="left">{item.name}</TableCell>
+                    <TableCell align="right">{item.category?.name || 'No category'}</TableCell>
+                    <TableCell align="right">
+                      <Button onClick={() => handleUpdateStoke(item?.id)}>
+                        {item.inStoke ? "In stock" : "Out of stock"}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} align="center">
+                    No Ingredients found
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} align="center">
-                  No Ingredient found
-                </TableCell>
-              </TableRow>
-            )}              
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
-      <Modal 
+      <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-              <CreateIngredientForm/>
+          <CreateIngredientForm />
         </Box>
       </Modal>
     </Box>

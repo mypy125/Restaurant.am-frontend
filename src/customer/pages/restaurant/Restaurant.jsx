@@ -42,10 +42,10 @@ import {
         
         try {
           if (id && jwt) {
-            console.log("Fetching data for restaurant:", id);
-              dispatch(getRestaurantById({ jwt, restaurantId: id }));
-              dispatch(getRestaurantsCategory({jwt, restaurantId: id }));
-              dispatch(getMenuItemsByRestaurantId({
+            console.log("Frestaurant id:---->", id);
+              await dispatch(getRestaurantById({ jwt, restaurantId: id }));
+              await dispatch(getRestaurantsCategory({jwt, restaurantId: id }));
+              await dispatch(getMenuItemsByRestaurantId({
               jwt,
               restaurantId: id,
               vegetarian: debouncedFoodType === "vegetarian",
@@ -53,7 +53,7 @@ import {
               seasonal: debouncedFoodType === "seasonal",
               foodCategory: debouncedCategory || "",
             }));
-            console.log("Fetched menu items:", menu.menuItems);
+            console.log("menu items:---->", menu.menuItems);
           } else {
             setError("Invalid restaurant ID or JWT.");
           }
@@ -124,7 +124,7 @@ import {
           </Grid>
           <h1 className="text-4xl py-1 font-semibold">{restaurant.restaurant?.name}</h1>
           <p className="text-gray-500 mt-1">{restaurant.restaurant?.description}</p>
-          <p className="py-3 text-orange-300">Open now 10:00am - 22:30pm (Today)</p>
+          <p className="py-3 text-orange-300">{restaurant.restaurant?.openingHours}</p>
         </section>
         <Divider />
         <section className="pt-[2rem] lg:flex relative">
@@ -182,9 +182,9 @@ import {
             </Card>
           </div>
           <div className="lg:w-[80%] space-y-5 lg:pl-10">
-            {menu.loading ? (
+            {menu?.menuItems.loading ? (
               <CircularProgress />
-            ) : menu.menuItems && menu.menuItems.length > 0 ? (
+            ) : menu?.menuItems && menu.menuItems.length > 0 ? (
               menu.menuItems.map((item) => <MenuItemCard key={item.id} item={item} />)
             ) : (
               <Typography>No menu items available</Typography>

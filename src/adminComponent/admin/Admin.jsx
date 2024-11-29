@@ -25,11 +25,11 @@ export const Admin = () => {
         
         dispatch(getRestaurantsCategory({
             jwt, 
-            restaurantId: restaurant?.id
+            restaurantId: restaurant.userRestaurant?.id
         }));
         dispatch(fetchRestaurantsOrder({
             jwt, 
-            restaurantId: restaurant?.id
+            restaurantId: restaurant.userRestaurant?.id
         }));
         
     }, []);

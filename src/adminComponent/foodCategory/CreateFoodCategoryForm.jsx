@@ -6,7 +6,10 @@ import { createCategoryAction } from "../../customer/state/restaurant/Action";
 const CreateFoodCategoryForm = () => {
     const restaurant = useSelector((state) => state.restaurant);
     const dispatch = useDispatch();
-    const [formData, setFormData]=useState({categoryName:"",restaurantId:""})
+    const [formData, setFormData]=useState({
+        categoryName:"",
+        restaurantId:""
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault();

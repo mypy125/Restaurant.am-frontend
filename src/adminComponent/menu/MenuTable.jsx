@@ -22,15 +22,18 @@ import { deleteFoodAction, getMenuItemsByRestaurantId } from "../../customer/sta
 
 export const MenuTable = () => {
   const dispatch = useDispatch();
-  const { restaurant, ingredients, menu } = useSelector((store) => store);
+  const { restaurant, ingredients} = useSelector((store) => store);
+  const { menu } = useSelector((store) => store.menu || { menuItems: [] });
+  const menuItems = menu?.menuItems || [];
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     if (jwt && restaurant.userRestaurant.id) {
       dispatch(getMenuItemsByRestaurantId({
         jwt,
-        restaurantId: restaurant.userRestaurant.id,
+        restaurantId: restaurant.userRestaurant?.id,
         vegetarian: false,
         seasonal: false,
         nonveg: false,
@@ -38,6 +41,10 @@ export const MenuTable = () => {
       }));
     }
   }, []);
+
+  useEffect(() => {
+    console.log("Store content:", menu);
+  }, [menu]);
 
   const handleDeleteFood = (foodId) => {
     dispatch(deleteFoodAction({foodId, jwt}))
@@ -69,33 +76,35 @@ export const MenuTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {menu?.menuItems?.length > 0 ? (
-                menu?.menuItems?.map((item) => (
-                  <TableRow key={item.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                    <TableCell component="th" scope="row">
-                      <Avatar src={item.images[0]}></Avatar>
-                    </TableCell>
-                    <TableCell align="left">{item.name}</TableCell>
-                    <TableCell align="right">
-                      {item.ingredients.map((ingredient)=><Chip label={ingredient.name}/>)}
-                    </TableCell>
-                    <TableCell align="right">֏{item.price}</TableCell>
-                    <TableCell align="right">{item.available ? "in_stoke" : "out_of_stoke"}</TableCell>
-                    <TableCell align="right">
-                      <IconButton color="primary" onClick={()=> handleDeleteFood(item.id)}>
-                        <Delete />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} align="center">
-                    No menu found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
+            {menu?.menuItems?.length > 0 ? (
+               menu.menuItems.map((item) => (
+                 <TableRow key={item.id}>
+                   <TableCell>
+                     <Avatar src={item.images?.[0]} />
+                   </TableCell>
+                   <TableCell>{item.name}</TableCell>
+                   <TableCell>
+                     {item.ingredients?.map((ingredient) => (
+                       <Chip key={ingredient.id} label={ingredient.name} />
+                     ))}
+                   </TableCell>
+                   <TableCell>֏{item.price}</TableCell>
+                   <TableCell>{item.available ? "In_stock" : "Out_of_stock"}</TableCell>
+                   <TableCell>
+                     <IconButton onClick={() => handleDeleteFood(item.id)}>
+                       <Delete />
+                     </IconButton>
+                   </TableCell>
+                 </TableRow>
+               ))
+             ) : (
+               <TableRow>
+                 <TableCell colSpan={6} align="center">
+                   No menu found
+                 </TableCell>
+               </TableRow>
+             )}
+            </TableBody>            
           </Table>
         </TableContainer>
       </Card>
