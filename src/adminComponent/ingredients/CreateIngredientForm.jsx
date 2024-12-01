@@ -7,10 +7,15 @@ const CreateIngredientForm = () => {
     const dispatch = useDispatch();
     const { restaurant, ingredients } = useSelector((store) => store);
     const jwt = localStorage.getItem("jwt");
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         categoryId: "",
     });
+
+    if (!restaurant?.userRestaurant?.id || !jwt) {
+        return <p>Please log in and select a restaurant to create an ingredient.</p>;
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -20,21 +25,28 @@ const CreateIngredientForm = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.categoryId) {
             alert("Please select a category!");
             return;
         }
 
+        setIsSubmitting(true);
         const data = {
             ...formData,
             restaurantId: restaurant.userRestaurant.id,
         };
 
-        console.log("createIngredient data:", data);
-        dispatch(createIngredient({ data, jwt }));
+        try {
+            console.log("createIngredient data:", data);
+            await dispatch(createIngredient({ data, jwt }));
+            setFormData({ name: "", categoryId: "" }); 
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
 
     return (
         <div className="p-5 space-y-5">
@@ -62,16 +74,16 @@ const CreateIngredientForm = () => {
                         {ingredients?.category?.length > 0 ? (
                             ingredients.category.map((item) => (
                                 <MenuItem key={item.id} value={item.id}>
-                                    {item.name || "No Category"}
+                                    {item.name || "No Name"}
                                 </MenuItem>
                             ))
                         ) : (
-                            <MenuItem disabled>No categories available</MenuItem>
+                            <MenuItem disabled>No categories available. Please create a category first.</MenuItem>
                         )}
                     </Select>
                 </FormControl>
-                <Button variant="contained" type="submit">
-                    Create Ingredient
+                <Button variant="contained" type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Creating..." : "Create Ingredient"}
                 </Button>
             </form>
         </div>

@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import {
-  Modal, Box, Card, CardHeader,Table,TableBody,TableCell,TableContainer,
-  TableHead,TableRow, Paper, IconButton,
+  Modal, Box, Card, CardHeader, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, IconButton
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import CreateIngredientCategoryForm from "./CreateIngredientCategoryForm";
 import { useDispatch, useSelector } from "react-redux";
 import { getIngredientCategory } from "../../customer/state/ingredients/Action";
-import CreateIngredientForm from "./CreateIngredientForm";
-
-const ingredientCategory = [1,1,1,1,1];
 
 const style = {
   position: 'absolute',
@@ -25,27 +22,26 @@ const style = {
 
 export const IngredientCategoryTable = () => {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
-  const {restaurant,ingredients} = useSelector((store)=> store)
-
-
   const jwt = localStorage.getItem("jwt");
+  const { restaurant, ingredients } = useSelector((store) => store);
 
-  useEffect(()=> {
+  const handleModalToggle = () => setOpen((prevState) => !prevState);
+
+  useEffect(() => {
     if (restaurant.userRestaurant?.id && jwt) {
-      dispatch(getIngredientCategory({id:restaurant.userRestaurant.id,jwt}))
+      dispatch(getIngredientCategory({ id: restaurant.userRestaurant.id, jwt }));
     }
-  },[restaurant.userRestaurant?.id, jwt, dispatch])
+  }, [restaurant.userRestaurant?.id, jwt, dispatch]);
 
+  const categories = ingredients?.category || [];
 
   return (
     <Box>
       <Card sx={{ mt: 1 }}>
         <CardHeader
           action={
-            <IconButton onClick={handleOpen} aria-label="settings">
+            <IconButton onClick={handleModalToggle} aria-label="settings">
               <CreateIcon />
             </IconButton>
           }
@@ -61,29 +57,21 @@ export const IngredientCategoryTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredients?.category && ingredients.category.length > 0 ? (
-                ingredients.category.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell component="th" scope="row">
-                      {item.id}
-                    </TableCell>
-                    <TableCell align="right">{item.name}</TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={2} align="center">
-                    No categories found
-                  </TableCell>
+              {categories.map((item) => (
+                <TableRow key={item.id}>{/**item.name */}
+                  <TableCell component="th" scope="row">{item.id}</TableCell>
+                  <TableCell align="right">{item.name}</TableCell>
                 </TableRow>
-              )}
+              ))
+             }
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
+
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleModalToggle}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >

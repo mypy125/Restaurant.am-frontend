@@ -9,20 +9,31 @@ const CreateIngredientCategoryForm = () => {
     const {restaurant} = useSelector(store => store)
     const [formData, setFormData]=useState({
         name:"",
-        
     });
+
+    if (!restaurant?.userRestaurant?.id || !jwt) {
+        return <p>Please log in and select a restaurant to create a category.</p>;
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data={
-            name: formData.name,
-            restaurantId: restaurant.userRestaurant.id
+    
+        if (!formData.name.trim()) {
+            alert("Category name cannot be empty!");
+            return;
         }
-        console.log("createIngredientCategory data,--->",data);
-        dispatch(createIngredientCategory({data,jwt}))
-        setFormData({ name: ""});
+    
+        const data = {
+            name: formData.name,
+            restaurantId: restaurant.userRestaurant.id,
+        };
+    
+        dispatch(createIngredientCategory({ data, jwt }));
+        alert("Category created successfully!");
+        setFormData({ name: "" });
     };
-
+    
+    
     const handleInputChange = (e) => {
         const {name,value} = e.target
         setFormData({

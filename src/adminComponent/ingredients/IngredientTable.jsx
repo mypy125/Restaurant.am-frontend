@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import {
-  Modal, Box, Card, CardHeader, Table,TableBody, TableCell, TableContainer,
-  TableHead, TableRow,Paper,IconButton,
-  Button,
+  Modal, Box, Card, CardHeader, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, IconButton, Button
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import CreateIngredientForm from "./CreateIngredientForm";
 import { useDispatch, useSelector } from "react-redux";
 import { getIngredientOfRestaurant, updateStockOfIngredient } from "../../customer/state/ingredients/Action";
-
-const menu = [1,1,1,1,1];
 
 const style = {
   position: 'absolute',
@@ -26,25 +23,22 @@ const style = {
 export const IngredientTable = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {restaurant,ingredients} = useSelector(store => store)
+  const { restaurant, ingredients } = useSelector((store) => store);
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  useEffect(()=> {
-    if (jwt && restaurant.userRestaurant.id) {
-      dispatch(getIngredientOfRestaurant({jwt,id:restaurant.userRestaurant.id}))
-    }
-  },[jwt, restaurant.userRestaurant.id, dispatch])
-
   useEffect(() => {
-    console.log(ingredients); 
-  }, [ingredients]);
+    if (jwt && restaurant.userRestaurant.id) {
+      dispatch(getIngredientOfRestaurant({ jwt, id: restaurant.userRestaurant.id }));
+    }
+  }, [jwt, restaurant.userRestaurant.id, dispatch]);
 
-  const handleUpdateStoke = (id) => {
-    dispatch(updateStockOfIngredient({id,jwt}))
-  }
- 
+  const handleUpdateStock = (id) => {
+    dispatch(updateStockOfIngredient({ id, jwt }));
+  };
+
   return (
     <Box>
       <Card>
@@ -54,32 +48,28 @@ export const IngredientTable = () => {
               <CreateIcon />
             </IconButton>
           }
-          title={"Ingredients"}
+          title="Ingredients"
           sx={{ pt: 2, textAlign: "center" }}
         />
-        
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth:650}} aria-label="simple table">
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">id</TableCell>
-                <TableCell align="right">Name</TableCell>
-                <TableCell align="right">Category</TableCell>
-                <TableCell align="right">Availableti</TableCell>
+                <TableCell align="left">ID</TableCell>
+                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Category</TableCell>
+                <TableCell align="left">Availability</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredients?.ingredients && ingredients.ingredients.length > 0 ? (
+              {ingredients?.ingredients.length > 0 ? (
                 ingredients.ingredients.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
+                  <TableRow key={item.id}>
                     <TableCell component="th" scope="row">{item.id}</TableCell>
                     <TableCell align="left">{item.name}</TableCell>
-                    <TableCell align="right">{item.category?.name || 'No category'}</TableCell>
-                    <TableCell align="right">
-                      <Button onClick={() => handleUpdateStoke(item?.id)}>
+                    <TableCell align="left">{item.category ? item.category.name : 'No category'}</TableCell>
+                    <TableCell align="left">
+                      <Button onClick={() => handleUpdateStock(item.id)}>
                         {item.inStoke ? "In stock" : "Out of stock"}
                       </Button>
                     </TableCell>
@@ -96,6 +86,7 @@ export const IngredientTable = () => {
           </Table>
         </TableContainer>
       </Card>
+
       <Modal
         open={open}
         onClose={handleClose}
