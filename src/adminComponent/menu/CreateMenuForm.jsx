@@ -34,34 +34,33 @@ const CreateMenuForm = () => {
       const requestData = {
         name: values.name,
         description: values.description,
-        price: Number(values.price),  
+        price: Number(values.price),
         category: {
-          id: Number(values.category) || 0, 
+          id: Number(values.category) || 0,
         },
-        images: values.images, 
+        images: values.images,
         vegetarian: values.vegetarian,
         seasonal: values.seasonal,
         ingredients: values.ingredients
           .map((ingredientId) => {
             const ingredient = ingredients.ingredients.find(item => item.id === ingredientId);
-    
             if (ingredient && ingredient.category) {
               return {
                 id: ingredient.id,
                 name: ingredient.name,
                 category: {
                   id: ingredient.category.id,
-                  name: ingredient.category.name
-                }
+                  name: ingredient.category.name,
+                },
               };
             } else {
               console.error(`Ingredient with ID ${ingredientId} not found or missing category`);
-              return null; 
+              return null;
             }
           })
-          .filter(item => item !== null), 
-        restaurantId: restaurant.userRestaurant.id, 
-      };
+          .filter(item => item !== null),
+        restaurantId: restaurant.userRestaurant.id,
+      };      
     
       console.log("Request payload:", requestData);
       
