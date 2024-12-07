@@ -23,8 +23,7 @@ import { deleteFoodAction, getMenuItemsByRestaurantId } from "../../customer/sta
 export const MenuTable = () => {
   const dispatch = useDispatch();
   const { restaurant, ingredients} = useSelector((store) => store);
-  const { menu } = useSelector((store) => store.menu || { menuItems: [] });
-  const menuItems = menu?.menuItems || [];
+  const { menu } = useSelector((store) => store);
   const jwt = localStorage.getItem("jwt");
   const navigate = useNavigate();
   

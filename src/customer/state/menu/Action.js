@@ -54,14 +54,7 @@ export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
 
     console.log("Request Data:", reqData);
 
-    if (!reqData || !reqData.restaurantId) {
-        console.error("Restaurant ID is undefined");
-        dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_FAILURE, payload: "Restaurant ID is required." });
-        return;
-    }
-
     try {
-        
         const { jwt, restaurantId, vegetarian, nonveg, seasonal, foodCategory } = reqData;
 
         const { data } = await api.get(
@@ -69,19 +62,16 @@ export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
             { headers: { Authorization: `Bearer ${jwt}` } }
         );
 
-        // console.log("API Response Data:", data);
+        console.log("API Response Data:", data);
 
-        if (data && data.menuItems) {
-            dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_SUCCESS, payload: data.menuItems });
-        } else {
-            dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_FAILURE, payload: "No menu items found." });
-        }
+        dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_SUCCESS, payload: data });
     } catch (error) {
         const errorMessage = handleError(error);
         console.error("Error in API call:", errorMessage);
         dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_FAILURE, payload: errorMessage });
     }
 };
+
 
 
 export const searchMenuItem = ({ keyword, jwt }) => async (dispatch) => {
