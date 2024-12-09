@@ -34,6 +34,7 @@ import {
     
     const [debouncedCategory] = useDebounce(selectedCategory, 500);
     const [debouncedFoodType] = useDebounce(selectedFoodType, 500);
+
   
     useEffect(() => {
       const fetchData = async () => {
@@ -183,11 +184,11 @@ import {
           </div>
           <div className="lg:w-[80%] space-y-5 lg:pl-10">
             {menu?.menuItems.loading ? (
-              <CircularProgress />
-            ) : menu?.menuItems && menu.menuItems.length > 0 ? (
-              menu.menuItems.map((item) => <MenuItemCard key={item.id} item={item} />)
+                <CircularProgress />
+            ) : menu?.menuItems.length > 0 ? (
+                menu.menuItems.map((item) => <MenuItemCard key={item.id} item={item} />)
             ) : (
-              <Typography>No menu items available</Typography>
+                <Typography>No menu items available</Typography>
             )}
           </div>
         </section>

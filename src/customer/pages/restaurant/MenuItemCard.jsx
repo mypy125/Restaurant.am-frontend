@@ -9,7 +9,7 @@ import { FormControlLabel, FormGroup, Typography } from "@mui/material";
 import CheckBox from "@mui/material/Checkbox";
 import { useDispatch } from "react-redux";
 import { addItemsToCart } from "../../state/cart/Action";
-import categorizeIngredients from "../../components/util/categorizeingredints";
+import categorizeIngredients from "../../components/util/categorizeIngredints";
 
 const MenuItemCard = React.memo(({ item }) => {
     const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -17,6 +17,7 @@ const MenuItemCard = React.memo(({ item }) => {
 
     const handleCheckBoxChange = (ingredientName) => {
         setSelectedIngredients((prev) => {
+            if (!ingredientName) return prev;
             if (prev.includes(ingredientName)) {
                 return prev.filter((item) => item !== ingredientName);
             } else {
@@ -64,28 +65,25 @@ const MenuItemCard = React.memo(({ item }) => {
             <AccordionDetails>
                 <form onSubmit={handleAddItemToCart}>
                     <div className="flex gap-5 flex-wrap">
-                        {Object.entries(categorizeIngredients(item.ingredients)).map(([category, ingredients]) => (
-                            <div key={category}> 
-                                <Typography variant="h6">{category}</Typography>
-                                <FormGroup>
-                                    {ingredients.length > 0 ? (
-                                        ingredients.map((ingredient) => (
-                                            <FormControlLabel 
-                                                key={ingredient.id || ingredient.name} 
-                                                control={
-                                                    <CheckBox 
-                                                        onChange={() => handleCheckBoxChange(ingredient.name)} 
-                                                    />
-                                                } 
-                                                label={ingredient.name} 
-                                            />
-                                        ))
-                                    ) : (
-                                        <Typography>No ingredients available</Typography>
-                                    )}
-                                </FormGroup>
-                            </div>
-                        ))}
+                        {Object.entries(categorizeIngredients(item.ingredients || []))
+                         .map(([category, ingredients]) => (
+                             <div key={category}>
+                                 <Typography variant="h6">{category}</Typography>
+                                 <FormGroup>
+                                     {ingredients.length > 0 ? (
+                                         ingredients.map((ingredient) => (
+                                             <FormControlLabel
+                                                 key={ingredient.id || ingredient.name}
+                                                 control={<CheckBox onChange={() => handleCheckBoxChange(ingredient.name)} />}
+                                                 label={ingredient.name}
+                                             />
+                                         ))
+                                     ) : (
+                                         <Typography>No ingredients available</Typography>
+                                     )}
+                                 </FormGroup>
+                             </div>
+                         ))}
                     </div>
                     <div>
                         <Button
@@ -101,22 +99,5 @@ const MenuItemCard = React.memo(({ item }) => {
         </Accordion>
     );
 });
-
-MenuItemCard.propTypes = {
-    item: PropTypes.shape({
-        id: PropTypes.number.isRequired, 
-        name: PropTypes.string.isRequired,
-        price: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        images: PropTypes.arrayOf(PropTypes.string).isRequired,
-        ingredients: PropTypes.arrayOf(PropTypes.shape({
-            name: PropTypes.string.isRequired,
-            category: PropTypes.shape({
-                name: PropTypes.string.isRequired
-            })
-        })).isRequired,
-        isAvailable: PropTypes.bool.isRequired,  
-    }).isRequired,
-};
 
 export default MenuItemCard;
