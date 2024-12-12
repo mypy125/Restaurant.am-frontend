@@ -33,7 +33,7 @@ export const IngredientTable = () => {
     if (jwt && restaurant.userRestaurant.id) {
       dispatch(getIngredientOfRestaurant({ jwt, id: restaurant.userRestaurant.id }));
     }
-  }, [jwt, restaurant.userRestaurant.id, dispatch]);
+  }, [jwt, restaurant.userRestaurant.id, dispatch])
 
   const handleUpdateStock = (id) => {
     dispatch(updateStockOfIngredient({ id, jwt }));

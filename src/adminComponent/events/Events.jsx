@@ -7,6 +7,8 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from "dayjs";
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createEventAction } from "../../customer/state/restaurant/Action";
 
 const style = {
     position: 'absolute',
@@ -24,6 +26,9 @@ export const Events = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const dispatch = useDispatch();
+    const {restaurant} = useSelector((store)=>store)
+    const jwt = localStorage.getItem("jwt")
 
     const [formValues, setFormValues] = React.useState({
         image: "",
@@ -41,6 +46,12 @@ export const Events = () => {
             endsAt: formValues.endsAt ? formValues.endsAt.format("MM/DD/YYYY hh:mm A") : null,
         };
         console.log("Submitted values:", formattedValues);
+        dispatch(createEventAction({
+            data: formValues,
+            restaurantId: restaurant.userRestaurant?.id,
+            jwt,
+        }))
+        setFormValues(formValues)
     };
 
     const handleFormChange = (e) => {

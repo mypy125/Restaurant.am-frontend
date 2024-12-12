@@ -75,7 +75,7 @@ export const MenuTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {menu?.menuItems?.length > 0 ? (
+            {menu?.menuItems.length > 0 ? (
                menu.menuItems.map((item) => (
                  <TableRow key={item.id}>
                    <TableCell>

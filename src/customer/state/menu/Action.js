@@ -27,7 +27,7 @@ export const createMenuItem = ({ menu, jwt }) => async (dispatch) => {
 
     try {
         const { data } = await api.post("/api/admin/food", menu, {
-            headers: { 
+            headers: {
                 Authorization: `Bearer ${jwt}`,
             },
         });
@@ -37,17 +37,23 @@ export const createMenuItem = ({ menu, jwt }) => async (dispatch) => {
         dispatch({ type: CREATE_MENU_ITEM_SUCCESS, payload: data });
     } catch (error) {
         console.error('Error:', error);
+
         if (error.response) {
             console.error('Response data:', error.response.data);
             console.error('Response status:', error.response.status);
+            if (error.response.status === 415) {
+                console.error('Unsupported Media Type (415): check Content-Type header.');
+            }
         } else if (error.request) {
             console.error('Request data:', error.request);
         } else {
             console.error('Request setup error:', error.message);
         }
+
         dispatch({ type: CREATE_MENU_ITEM_FAILURE, payload: handleError(error) });
     }
 };
+
 
 export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
     dispatch({ type: GET_MENU_ITEM_BY_RESTAURANT_ID_REQUEST });

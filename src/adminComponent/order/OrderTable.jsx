@@ -76,7 +76,7 @@ export const OrderTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {restaurantOrder.orders.length > 0 ? (
+              {restaurantOrder?.orders.length > 0 ? (
                 restaurantOrder.orders.map((item) => (
                   <TableRow
                     key={item.name}
