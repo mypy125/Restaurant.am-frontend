@@ -13,12 +13,13 @@ import {
   IconButton,
   Avatar,
   Chip,
+  Button,
 } from "@mui/material";
 import CreateIcon from '@mui/icons-material/Create';
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteFoodAction, getMenuItemsByRestaurantId } from "../../customer/state/menu/Action";
+import { deleteFoodAction, getMenuItemsByRestaurantId, updateMenuItemsAvailability } from "../../customer/state/menu/Action";
 
 export const MenuTable = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,10 @@ export const MenuTable = () => {
   useEffect(() => {
     console.log("Store content:", menu);
   }, [menu]);
+
+  const handleSetUpdateAvialablety = (foodId) => {
+    dispatch(updateMenuItemsAvailability({foodId, jwt}))
+  }
 
   const handleDeleteFood = (foodId) => {
     dispatch(deleteFoodAction({foodId, jwt}))
@@ -88,9 +93,13 @@ export const MenuTable = () => {
                      ))}
                    </TableCell>
                    <TableCell>֏{item.price}</TableCell>
-                   <TableCell>{item.available ? "In_stock" : "Out_of_stock"}</TableCell>
                    <TableCell>
-                     <IconButton onClick={() => handleDeleteFood(item.id)}>
+                      <Button onClick={() => handleSetUpdateAvialablety(item.id)}>
+                        {item.available ? "In_stock" : "Out_of_stock"}
+                      </Button>
+                    </TableCell>
+                   <TableCell>
+                     <IconButton color="primary" onClick={() => handleDeleteFood(item.id)}>
                        <Delete />
                      </IconButton>
                    </TableCell>

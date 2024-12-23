@@ -1,25 +1,42 @@
 import React from "react";
-import { Card, Button } from "@mui/material";
+import { Card, Button, Typography, Box } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 
 const AddressCard = ({ handleSelectAddress, item, showButton }) => {
   return (
-    <Card className="flex space-x-5 lg:w-64 m-5 p-5">
-      <HomeIcon />
-      <div className="space-y-3 text-gray-400">
-        <h1 className="font-semibold text-lg text-white">Home</h1>
-        <p>Main St, City, Country</p>
+    <Card
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        padding: 2,
+        margin: 2,
+        maxWidth: 256,
+        backgroundColor: "background.paper",
+      }}
+    >
+      <HomeIcon aria-label="Home Address" sx={{ color: "primary.main" }} />
 
-        {showButton && (
-          <Button 
-            variant="outlined" 
-            fullWidth 
-            onClick={() => handleSelectAddress(item)} 
-          >
-            Select
-          </Button>
-        )}
-      </div>
+      <Box sx={{ flexGrow: 1, color: "text.secondary" }}>
+        <Typography variant="h6" component="h1" sx={{ color: "text.primary", fontWeight: "bold" }}>
+          {item?.type || "Home"}
+        </Typography>
+        <Typography variant="body2">
+          {item?.address || "Main St, City, Country"}
+        </Typography>
+      </Box>
+
+      {/* Select Button */}
+      {showButton && (
+        <Button
+          variant="outlined"
+          fullWidth
+          onClick={() => handleSelectAddress(item)}
+          aria-label={`Select ${item?.type || "Home"} Address`}
+        >
+          Create Address
+        </Button>
+      )}
     </Card>
   );
 };

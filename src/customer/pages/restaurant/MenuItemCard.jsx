@@ -85,13 +85,14 @@ const MenuItemCard = React.memo(({ item }) => {
                              </div>
                          ))}
                     </div>
-                    <div>
+                    <div className="pt-5">
                         <Button
                             variant="contained"
+                            disabled={false}
+                            type="submit"
                             onClick={handleAddItemToCart}
-                            disabled={!item.isAvailable}  
                         >
-                            {item.isAvailable ? "Add To Cart" : "Out of Stock"}  
+                            {true ? "Add To Cart" : "Out of Stock"}  
                         </Button>
                     </div>
                 </form>

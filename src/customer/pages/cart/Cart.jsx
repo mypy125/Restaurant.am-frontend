@@ -1,11 +1,9 @@
-import React, { Fragment, useState } from "react";
-import CatItem from "./CatItem";
+import React, { useEffect, useState } from "react";
+import CartItem from "./CartItem";
 import AddressCard from "./AddressCard";
-import {
-  Divider, Card, Button, Modal, Box, TextField, Grid,
-} from "@mui/material";
-import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Divider, Card, Button, Modal, Box, TextField, Grid } from "@mui/material";
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../../state/order/Action";
@@ -24,79 +22,75 @@ export const style = {
 
 const initialValues = {
   streetAddress: "",
-  state: "",
-  pincode: "",
+  stateProvince: "",
+  postalCode: '',
   city: "",
 };
 
 const validationSchema = Yup.object().shape({
   streetAddress: Yup.string().required("Street Address is required"),
-  state: Yup.string().required("State is required"),
+  stateProvince: Yup.string().required("State is required"),
   city: Yup.string().required("City is required"),
-  pincode: Yup.number()
+  postalCode: Yup.number()
     .typeError("Pincode must be a number")
     .required("Pincode is required"),
 });
 
-const addresses = [1,1,1,1,1];
-
 const Cart = () => {
-  const [openAddressModal, setOpenAddressModal] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null); 
-
-  const { auth, cart, addresses } = useSelector((store) => store);
+  const { auth, cart } = useSelector((store)=>store)
+  const jwt = localStorage.getItem("jwt");
   const dispatch = useDispatch();
 
-  const handleSelectAddress = (address) => {
+  const [open, setOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const handleClose = () => setOpen(false);
+  const handleOpenAddressModal = () => setOpen(true);
+
+  const createOrderUsingSelectedAddres = (address) => {
     setSelectedAddress(address); 
-    console.log("Selected address:", address);
   };
 
-  const handleOpenAddressModal = () => {
-    setOpenAddressModal(true);
-  };
-
-  const handleCloseAddressModal = () => {
-    setOpenAddressModal(false);
-  };
-
+  const [isLoading, setIsLoading] = useState(true);
+  
   const handleSubmit = (values) => {
-    const restaurantId = cart.cartItems && cart.cartItems.length > 0 ? cart.cartItems[0].food?.restaurant.id : null;
-    const fullName = auth.user ? auth.user.fullName : "Guest"; 
+    if (isLoading) {
+        console.log("Waiting for cart data to load...");
+        return;
+    }
 
-    const data = {
-      jwt: localStorage.getItem("jwt"),
-      order: {
-        restaurantId: restaurantId,
-        deliveryAddress: {
-          fullName: fullName,
-          streetAddress: values.streetAddress,
-          city: values.city,
-          state: values.state,
-          postalCode: values.pincode,
-          country: "Armenia", 
-        },
-      },
-    };
-    dispatch(createOrder(data)); 
-    console.log("Form submitted with values:", values);
-    handleCloseAddressModal();
+    const restaurantId = cart.cartItems[0]?.food?.restaurant?.id;
+    if (restaurantId) {
+        const data = {
+            restaurantId: restaurantId,
+            deliveryAddress: {
+                streetAddress: values.streetAddress,
+                stateProvince: values.stateProvince,
+                postalCode: values.postalCode, 
+                city: values.city,
+                country: "Armenia",
+            },
+        };
+        dispatch(createOrder({ data, jwt, paymentMethod: "stripe" }));
+        console.log("Form submitted with values-->>", data);
+    } else {
+        console.error("Restaurant ID is missing from the cart items.");
+    }
   };
 
+  const handleAddAddress = (values) => {
+    dispatch(addAddress(values, jwt));
+    handleClose();
+  };
+  
   return (
-    <Fragment>
+    <>
       <main className="lg:flex justify-between">
         {/* Cart items section */}
         <section className="lg:w-[30%] space-y-6 min-h-screen pt-10">
-          <div className="space-y-6">
-            {cart.cartItems && cart.cartItems.length > 0 ? (
-              cart.cartItems.map((item) => (
-                <CatItem key={item.id} item={item} />
-              ))
-            ) : (
-              <p>No items in cart</p>
-            )}
-          </div>
+          {cart.cartItems?.map((item) => (
+            <CartItem key={item.id} item={item} />
+          ))}
           <Divider />
           {/* Bill details */}
           <div className="billDetails px-5 text-sm">
@@ -104,12 +98,20 @@ const Cart = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-gray-400">
                 <p>Item Total</p>
-                <p>{cart.cart?.total}</p>
+                <p>֏{cart.cart?.total}</p>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <p>Deliver Fee</p>
+                <p>֏{cart.cart?.total}</p>
+              </div>
+              <div className="flex justify-between text-gray-400">
+                <p>GST and Restaurant Charges</p>
+                <p>֏{cart.cart?.total}</p>
               </div>
               <Divider />
               <div className="flex justify-between text-gray-400">
                 <p>Total Payable</p>
-                <p>{cart.cart?.total + 33 + 21}</p>
+                <p>֏{cart.cart?.total + 33 + 21}</p>
               </div>
             </div>
           </div>
@@ -123,30 +125,22 @@ const Cart = () => {
           </h1>
 
           <div className="flex flex-wrap justify-between">
-            {Array.isArray(addresses) && addresses.length > 0 ? (
-              addresses.map((address) => (
-                <AddressCard
-                  key={address.id}
-                  item={address}
-                  showButton={true}
-                  handleSelectAddress={() => handleSelectAddress(address)}
-                />
-              ))
-            ) : (
-              <p>No addresses available</p>
-            )}
+            {cart.addresses?.map((item, index) => (
+              <AddressCard
+                key={index}
+                handleSelectAddress={createOrderUsingSelectedAddres}
+                item={item}
+                showButton={true}
+              />
+            ))}
 
             {/* Button to add new address */}
             <Card className="flex space-x-5 lg:w-64 m-5 p-5">
               <AddLocationAltIcon />
               <div className="space-y-3 text-gray-400">
-                <p>Add New Address</p>
-                <Button
-                  onClick={handleOpenAddressModal}
-                  fullWidth
-                  variant="contained"
-                  sx={{ padding: ".75rem" }}
-                >
+                <h1 className="font-semibold text-lg text-white">Add New Address</h1>
+                <p>Main St, City, Country</p>
+                <Button variant="outlined" fullWidth onClick={handleOpenAddressModal}>
                   Add
                 </Button>
               </div>
@@ -156,88 +150,81 @@ const Cart = () => {
       </main>
 
       {/* Modal for adding new address */}
-      <Modal open={openAddressModal} onClose={handleCloseAddressModal}>
-      <Box sx={style}>
-        <Formik
-          initialValues={{
-            street: "",
-            city: "",
-            state: "",
-            pincode: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            console.log("Form submitted:", values);
-          }}
-        >
-          {({ errors, touched }) => (
-            <Form>
-              <Grid container spacing={2}>
-                {/* Street Address Field */}
-                <Grid item xs={12}>
-                  <Field
-                    name="street"
-                    as={TextField}
-                    label="Street Address"
-                    fullWidth
-                    variant="outlined"
-                    error={touched.street && Boolean(errors.street)}
-                    helperText={touched.street && errors.street}
-                  />
-                </Grid>
+      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+        <Box sx={style}>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleAddAddress}
+          >
+            {({ touched, errors }) => (
+              <Form>
+                <Grid container spacing={2}>
+                  {/* Street Address Field */}
+                  <Grid item xs={12}>
+                    <Field
+                      name="streetAddress"
+                      as={TextField}
+                      label="Street Address"
+                      fullWidth
+                      variant="outlined"
+                      error={touched.streetAddress && Boolean(errors.streetAddress)}
+                      helperText={touched.streetAddress && errors.streetAddress}
+                    />
+                  </Grid>
 
-                {/* City Field */}
-                <Grid item xs={12}>
-                  <Field
-                    name="city"
-                    as={TextField}
-                    label="City"
-                    fullWidth
-                    variant="outlined"
-                    error={touched.city && Boolean(errors.city)}
-                    helperText={touched.city && errors.city}
-                  />
-                </Grid>
+                  {/* City Field */}
+                  <Grid item xs={12}>
+                    <Field
+                      name="city"
+                      as={TextField}
+                      label="City"
+                      fullWidth
+                      variant="outlined"
+                      error={touched.city && Boolean(errors.city)}
+                      helperText={touched.city && errors.city}
+                    />
+                  </Grid>
 
-                {/* State Field */}
-                <Grid item xs={12}>
-                  <Field
-                    name="state"
-                    as={TextField}
-                    label="State"
-                    fullWidth
-                    variant="outlined"
-                    error={touched.state && Boolean(errors.state)}
-                    helperText={touched.state && errors.state}
-                  />
-                </Grid>
+                  {/* State Field */}
+                  <Grid item xs={12}>
+                    <Field
+                      name="stateProvince"
+                      as={TextField}
+                      label="State"
+                      fullWidth
+                      variant="outlined"
+                      error={touched.stateProvince && Boolean(errors.stateProvince)}
+                      helperText={touched.stateProvince && errors.stateProvince}
+                    />
+                  </Grid>
 
-                {/* Pincode Field */}
-                <Grid item xs={12}>
-                  <Field
-                    name="pincode"
-                    as={TextField}
-                    label="Pincode"
-                    fullWidth
-                    variant="outlined"
-                    error={touched.pincode && Boolean(errors.pincode)}
-                    helperText={touched.pincode && errors.pincode}
-                  />
-                </Grid>
+                  {/* Pincode Field */}
+                  <Grid item xs={12}>
+                    <Field
+                      name="postalCode"
+                      as={TextField}
+                      label="Pincode"
+                      fullWidth
+                      variant="outlined"
+                      error={touched.postalCode && Boolean(errors.postalCode)}
+                      helperText={touched.postalCode && errors.postalCode}
+                    />
+                  </Grid>
 
-                {/* Submit Button */}
-                <Grid item xs={12}>
-                  <Button type="submit" variant="contained" fullWidth sx={{ marginTop: 2 }}>
-                    Submit
-                  </Button>
+                  {/* Submit Button */}
+                  <Grid item xs={12}>
+                    <Button type="submit" variant="contained" fullWidth sx={{ marginTop: 2 }}>
+                      Submit
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
-      </Box>
-    </Modal>
-    </Fragment>
+              </Form>
+            )}
+          </Formik>
+        </Box>
+      </Modal>
+    </>
   );
 };
 

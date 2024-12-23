@@ -3,18 +3,19 @@ import {
     CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, 
     GET_USER_NOTIFICATION_FAILURE, GET_USER_NOTIFICATION_REQUEST, 
     GET_USER_NOTIFICATION_SUCCESS, GET_USER_ORDERS_FAILURE, 
-    GET_USER_ORDERS_REQUEST, GET_USER_ORDERS_SUCCESS 
+    GET_USER_ORDERS_REQUEST, GET_USER_ORDERS_SUCCESS,ADD_ADDRESS_REQUEST,
+    ADD_ADDRESS_SUCCESS, ADD_ADDRESS_FAILURE
 } from "./ActionType";
 
 
 const handleError = (error) => error.response?.data?.message || error.message;
 
-
-export const createOrder = ({ order, jwt }) => async (dispatch) => {
+export const createOrder = ({ order, jwt, paymentMethod }) => async (dispatch) => {
     dispatch({ type: CREATE_ORDER_REQUEST });
 
     try {
         const { data } = await api.post("/api/order/", order, {
+            params: {order_status: paymentMethod},
             headers: { Authorization: `Bearer ${jwt}` },
         });
 

@@ -7,7 +7,6 @@ import cartReducer from "./cart/Reducer";
 import orderReducer from "./order/Reducer";
 import ingredientReducer from "./ingredients/Reducer";
 import restaurantsOrderReducer from "./restaurantOrder/Reducer";
-import addressReducer from "./address/Reducer";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -17,7 +16,6 @@ const rootReducer = combineReducers({
     order: orderReducer,
     restaurantOrder: restaurantsOrderReducer,
     ingredients: ingredientReducer,
-    addresses: addressReducer
     
 });
 

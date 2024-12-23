@@ -38,7 +38,7 @@ export const IngredientCategoryTable = () => {
 
   return (
     <Box>
-      <Card sx={{ mt: 1 }}>
+      <Card className="mt-1">
         <CardHeader
           action={
             <IconButton onClick={handleModalToggle} aria-label="settings">

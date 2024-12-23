@@ -51,7 +51,7 @@ const CreateIngredientForm = () => {
     return (
         <div className="p-5 space-y-5">
             <h1 className="text-gray-400 text-center text-xl pb-10">Create Ingredient</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <TextField
                     fullWidth
                     id="name"

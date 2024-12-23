@@ -1,6 +1,6 @@
-
 import { api } from "../../config/api";
-import { ADD_ITEMS_TO_CART_FAILURE, 
+import { 
+    ADD_ITEMS_TO_CART_FAILURE, 
     ADD_ITEMS_TO_CART_REQUEST, 
     ADD_ITEMS_TO_CART_SUCCESS, 
     CLEARE_CART_FAILURE, 
@@ -17,19 +17,35 @@ import { ADD_ITEMS_TO_CART_FAILURE,
     REMOVE_CARTITEM_SUCCESS, 
     UPDATE_CARTITEM_FAILURE, 
     UPDATE_CARTITEM_REQUEST, 
-    UPDATE_CARTITEM_SUCCESS 
+    UPDATE_CARTITEM_SUCCESS,
+    ADD_ADDRESS_REQUEST,
+    ADD_ADDRESS_SUCCESS, 
+    ADD_ADDRESS_FAILURE
+    
 } from "./ActionType";
 
 const handleError = (error) => error.response?.data?.message || error.message;
 
+export const addAddress = ({addressData, jwt}) => async (dispatch) => {
+    dispatch({ type: ADD_ADDRESS_REQUEST });
 
-export const findCart = (token) => async (dispatch) => {
+    try {
+        const { data } = await api.post("/api/address", addressData, {
+            headers: { Authorization: `Bearer ${jwt}` }
+        });
+        dispatch({ type: ADD_ADDRESS_SUCCESS, payload: data });
+    } catch (error) {
+        dispatch({ type: ADD_ADDRESS_FAILURE, payload: handleError(error) });
+    }
+};
+
+export const findCart = (jwt) => async (dispatch) => {
     dispatch({ type: FIND_CART_REQUEST });
 
     try {
         const response = await api.get("/api/cart", {
             headers: { 
-                Authorization: `Bearer ${token}` 
+                Authorization: `Bearer ${jwt}` 
             }
         });
         console.log("my cart ", response.data)

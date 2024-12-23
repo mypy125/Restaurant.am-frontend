@@ -99,7 +99,7 @@ export const OrderTable = () => {
                       {item.items.map((orderItem)=><p>{orderItem.food?.name}</p>)}
                     </TableCell>
                     <TableCell align="right">
-                    {item.items.map((orderItem)=>
+                    {item.ingredients.map((orderItem)=>
                     <div>
                       {orderItem.ingredients.map((ingredient)=> <Chip label={ingredient}/>)}
                     </div>
