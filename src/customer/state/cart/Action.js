@@ -1,3 +1,4 @@
+
 import { api } from "../../config/api";
 import { 
     ADD_ITEMS_TO_CART_FAILURE, 
@@ -82,12 +83,12 @@ export const addItemsToCart = (reqData) => async (dispatch) => {
     }
 };
 
-export const updateCartItem = (reqData) => async (dispatch) => {
+export const updateCartItem = ({reqData,token}) => async (dispatch) => {
     dispatch({ type: UPDATE_CARTITEM_REQUEST });
 
     try {
-        const { data } = await api.put("/api/cart-item/update", reqData.cartItem, {
-            headers: { Authorization: `Bearer ${reqData.jwt}` }
+        const { data } = await api.put("/api/cart-item/update", reqData, {
+            headers: { Authorization: `Bearer ${token}` }
         });
         dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: data });
     } catch (error) {

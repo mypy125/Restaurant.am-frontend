@@ -16,8 +16,8 @@ const CartItem = ({ item }) => {
             handleRemoveCartItem();
             return;
         }
-        const data = { cartItemId: item.id, quantity: item.quantity + value };
-        dispatch(updateCartItem({data, jwt:auth.jwt || jwt}));
+        const reqData = { id: item.id, quantity: item.quantity + value };
+        dispatch(updateCartItem({reqData, token:jwt}));
     };
 
     const handleRemoveCartItem = () => {
@@ -54,7 +54,7 @@ const CartItem = ({ item }) => {
             </div>
             <div className="pt-3 space-x-2">
                 {item?.ingredients?.length > 0 ? (
-                    item.ingredients.map((ingredient) => <Chip key={ingredient} label={ingredient} />)
+                    item.ingredients.map((ingredient) => <Chip key={ingredient} label={ingredient.name} />)
                 ) : (
                     <p>No ingredients listed</p>
                 )}

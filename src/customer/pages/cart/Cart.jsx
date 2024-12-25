@@ -7,6 +7,7 @@ import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../../state/order/Action";
+import { findCart } from "../../state/cart/Action";
 
 export const style = {
   position: "absolute",
@@ -51,7 +52,7 @@ const Cart = () => {
     setSelectedAddress(address); 
   };
 
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = !cart?.cartItems || cart.cartItems.length === 0;
   
   const handleSubmit = (values) => {
     if (isLoading) {
@@ -88,9 +89,11 @@ const Cart = () => {
       <main className="lg:flex justify-between">
         {/* Cart items section */}
         <section className="lg:w-[30%] space-y-6 min-h-screen pt-10">
-          {cart.cartItems?.map((item) => (
-            <CartItem key={item.id} item={item} />
-          ))}
+        {cart?.cartItems?.length > 0 ? (
+          cart.cartItems.map((item) => <CartItem key={item.id} item={item} />)
+        ) : (
+          <p>cart is empty</p>
+        )}
           <Divider />
           {/* Bill details */}
           <div className="billDetails px-5 text-sm">
@@ -155,7 +158,7 @@ const Cart = () => {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleAddAddress}
+            onSubmit={handleSubmit}
           >
             {({ touched, errors }) => (
               <Form>
