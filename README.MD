@@ -51,10 +51,21 @@ The project was inspired by the idea of creating a convenient and modern solutio
 ## 🔧 Modules Used
 
 ### **Core Components**
-- **Navigation** — for routing between pages
-- **Cart** — displays selected items with editing options
-- **Restaurant Menu** — interactive lists of dishes with filters
-- **User Profile** — manage user accounts
+- **Navigation** — handles routing between different pages in the application.  
+- **AdminSideBar** — provides administrators with quick navigation options for managing the platform.  
+- **RestaurantDetails** — displays detailed information about a specific restaurant, including its menu and reviews.  
+- **CreateRestaurantForm** — a form for administrators to add new restaurants to the platform.  
+- **RestaurantDashboard** — an overview of restaurant performance, including orders, revenue, and customer feedback.  
+- **CreateEvent** — enables administrators to create promotional events or campaigns for restaurants.  
+- **CreateFoodCategoryForm** — a form to define and manage categories for food items.  
+- **CreateIngredientCategoryForm** — allows administrators to categorize ingredients efficiently.  
+- **CreateIngredientForm** — provides tools to add and manage individual ingredients used in menu items.  
+- **IngredientTable** — displays a list of ingredients with options for editing or deleting.  
+- **CreateMenuForm** — enables administrators to create and update menus for restaurants.  
+- **OrderTable** — lists all orders with statuses, customer details, and options for managing orders.  
+- **Cart** — displays selected items with editing options for users.  
+- **Restaurant Menu** — interactive lists of dishes with filters for an enhanced user experience.  
+- **User Profile** — allows users to manage their accounts, view orders, and update personal information.  
 
 ### **Validation and Security**
 - **Forms** — data handling with Yup validation
