@@ -53,11 +53,18 @@ const CartItem = ({ item }) => {
                 </div>
             </div>
             <div className="pt-3 space-x-2">
-                {item?.ingredients?.length > 0 ? (
-                    item.ingredients.map((ingredient) => <Chip key={ingredient} label={ingredient.name} />)
+            {Array.isArray(item?.ingredients) && item.ingredients.length > 0 ? (
+                    item.ingredients.map((ingredient) => (
+                        <Chip key={ingredient} label={ingredient} />
+                    ))
                 ) : (
                     <p>No ingredients listed</p>
                 )}
+                {/* {item?.ingredients?.length > 0 ? (
+                    item.ingredients.map((ingredient) => <Chip key={ingredient.name} label={ingredient.name} />)
+                ) : (
+                    <p>No ingredients listed</p>
+                )} */}
             </div>
         </div>
     );
