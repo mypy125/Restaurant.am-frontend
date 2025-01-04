@@ -88,3 +88,9 @@ The project was inspired by the idea of creating a convenient and modern solutio
 
 🎉 **Explore the project** and enjoy the seamless online food ordering experience! Feel free to contribute or provide feedback to help improve it further.
 
+---
+
+## License
+
+This project is licensed under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/mypy125/Restaurant.am-frontend/LICENSE.txt) file for more details.
+
