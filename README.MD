@@ -92,5 +92,5 @@ The project was inspired by the idea of creating a convenient and modern solutio
 
 ## License
 
-This project is licensed under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/mypy125/Restaurant.am-frontend/LICENSE.txt) file for more details.
+This project is licensed under the terms of the GNU General Public License v3.0. See the [LICENSE](https://github.com/mypy125/Restaurant.am-frontend/blob/main/LICENSE.txt) file for more details.
 
